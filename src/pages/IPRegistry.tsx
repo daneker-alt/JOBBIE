@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import RiskBadge from '../components/RiskBadge'
 import { Shield, AlertTriangle, CheckCircle, Plus, X } from 'lucide-react'
 
 type IPAsset = {
@@ -9,14 +10,15 @@ type IPAsset = {
   status: 'assigned' | 'pending' | 'risk'
   contractors: string
   notes: string
+  riskScore: number
 }
 
 const initialAssets: IPAsset[] = [
-  { id: 1, name: 'Backend API (Node.js)', type: 'Код', owner: 'AI Health Assistant Ltd', status: 'assigned', contractors: '', notes: 'IP assignment подписан всеми основателями' },
-  { id: 2, name: 'ML Health Model v2', type: 'AI-модель', owner: 'Алибек (основатель)', status: 'risk', contractors: '', notes: 'Не передано на компанию — нужен IP assignment' },
-  { id: 3, name: 'UI/UX Design System', type: 'Дизайн', owner: 'AI Health Assistant Ltd', status: 'pending', contractors: 'Freelance Designer', notes: 'Ожидает подписания от подрядчика' },
-  { id: 4, name: 'Training Dataset v1', type: 'Датасет', owner: 'AI Health Assistant Ltd', status: 'assigned', contractors: '', notes: 'Датасет собственный, лицензия оформлена' },
-  { id: 5, name: 'Mobile App (React Native)', type: 'Код', owner: 'Диана (основатель)', status: 'risk', contractors: 'Dev Agency KZ', notes: 'Нет IP assignment от подрядчика и основателя' },
+  { id: 1, name: 'Backend API (Node.js)', type: 'Код', owner: 'AI Health Assistant Ltd', status: 'assigned', contractors: '', notes: 'IP assignment подписан всеми основателями', riskScore: 25 },
+  { id: 2, name: 'ML Health Model v2', type: 'AI-модель', owner: 'Алибек (основатель)', status: 'risk', contractors: '', notes: 'Не передано на компанию — нужен IP assignment', riskScore: 85 },
+  { id: 3, name: 'UI/UX Design System', type: 'Дизайн', owner: 'AI Health Assistant Ltd', status: 'pending', contractors: 'Freelance Designer', notes: 'Ожидает подписания от подрядчика', riskScore: 55 },
+  { id: 4, name: 'Training Dataset v1', type: 'Датасет', owner: 'AI Health Assistant Ltd', status: 'assigned', contractors: '', notes: 'Датасет собственный, лицензия оформлена', riskScore: 25 },
+  { id: 5, name: 'Mobile App (React Native)', type: 'Код', owner: 'Диана (основатель)', status: 'risk', contractors: 'Dev Agency KZ', notes: 'Нет IP assignment от подрядчика и основателя', riskScore: 85 },
 ]
 
 const typeColors: Record<string, string> = {
@@ -42,12 +44,12 @@ function StatusBadge({ status }: { status: IPAsset['status'] }) {
 export default function IPRegistry() {
   const [assets, setAssets] = useState<IPAsset[]>(initialAssets)
   const [showAdd, setShowAdd] = useState(false)
-  const [newAsset, setNewAsset] = useState({ name: '', type: 'Код', owner: '', contractors: '', notes: '' })
+  const [newAsset, setNewAsset] = useState({ name: '', type: 'Код', owner: '', contractors: '', notes: '', riskScore: 55 })
 
   const addAsset = () => {
     if (!newAsset.name) return
-    setAssets(a => [...a, { ...newAsset, id: Date.now(), status: 'pending' }])
-    setNewAsset({ name: '', type: 'Код', owner: '', contractors: '', notes: '' })
+    setAssets(a => [...a, { ...newAsset, id: Date.now(), status: 'pending', riskScore: newAsset.riskScore }])
+    setNewAsset({ name: '', type: 'Код', owner: '', contractors: '', notes: '', riskScore: 55 })
     setShowAdd(false)
   }
 
@@ -105,6 +107,7 @@ export default function IPRegistry() {
                     <th className="text-left text-slate-500 font-medium px-4 py-3">Владелец</th>
                     <th className="text-left text-slate-500 font-medium px-4 py-3">Подрядчики</th>
                     <th className="text-left text-slate-500 font-medium px-4 py-3">Статус</th>
+                    <th className="text-left text-slate-500 font-medium px-4 py-3">Риск</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,6 +130,7 @@ export default function IPRegistry() {
                       <td className="px-4 py-4 text-slate-300">{asset.owner}</td>
                       <td className="px-4 py-4 text-slate-400">{asset.contractors || '—'}</td>
                       <td className="px-4 py-4"><StatusBadge status={asset.status} /></td>
+                      <td className="px-4 py-4"><RiskBadge score={asset.riskScore} /></td>
                     </tr>
                   ))}
                 </tbody>
