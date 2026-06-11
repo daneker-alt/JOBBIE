@@ -1,6 +1,4 @@
 import { CheckCircle, AlertTriangle, TrendingUp, FileText, Users } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 
 const capTable = [
   { name: 'Алибек Джаксыбеков', role: 'CEO / Co-founder', equity: 45, type: 'Common' },
@@ -78,11 +76,7 @@ export default function InvestorRoom() {
   const readinessScore = Math.round((doneItems / totalItems) * 100)
 
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="Инвестиции" />
-        <main className="flex-1 p-6 space-y-6">
+    <div className="space-y-6">
 
           {/* Score */}
           <div className="grid grid-cols-3 gap-4">
@@ -205,8 +199,6 @@ export default function InvestorRoom() {
             </div>
           </div>
 
-        </main>
-      </div>
     </div>
   )
 }

@@ -1,6 +1,4 @@
 import { FileText, Download, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 
 const templates = [
   { name: 'MSA (Master Service Agreement)', desc: 'Базовый договор на оказание услуг для B2B клиентов', type: 'Sales', status: 'ready' },
@@ -38,11 +36,7 @@ export default function ContractsHub() {
   const readyCount = templates.filter(t => t.status === 'ready').length
 
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="Договоры" />
-        <main className="flex-1 p-6 space-y-6">
+    <div className="space-y-6">
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
@@ -122,8 +116,6 @@ export default function ContractsHub() {
             </div>
           </div>
 
-        </main>
-      </div>
     </div>
   )
 }

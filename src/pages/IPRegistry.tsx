@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { Shield, AlertTriangle, CheckCircle, Plus, X } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 
 type IPAsset = {
   id: number
@@ -57,11 +55,7 @@ export default function IPRegistry() {
   const pendingCount = assets.filter(a => a.status === 'pending').length
 
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="IP Реестр" />
-        <main className="flex-1 p-6">
+    <div>
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
@@ -183,8 +177,6 @@ export default function IPRegistry() {
               </div>
             </div>
           )}
-        </main>
-      </div>
     </div>
   )
 }

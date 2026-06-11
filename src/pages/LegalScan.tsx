@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 
 const steps = [
   { id: 1, title: 'Компания', subtitle: 'Основная информация' },
@@ -123,11 +121,7 @@ export default function LegalScan() {
   const risk = calcRisk(form)
 
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="Legal Scan" />
-        <main className="flex-1 p-6">
+    <div>
           {!done ? (
             <div className="max-w-2xl mx-auto">
               {/* Progress */}
@@ -316,8 +310,6 @@ export default function LegalScan() {
               </div>
             </div>
           )}
-        </main>
-      </div>
     </div>
   )
 }

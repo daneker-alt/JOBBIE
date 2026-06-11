@@ -1,6 +1,4 @@
 import { CheckCircle, AlertTriangle, Database, Shield } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 
 const privacyItems = [
   { id: 1, title: 'Privacy Policy опубликована', desc: 'Политика конфиденциальности доступна на сайте и в приложении', done: true },
@@ -44,11 +42,7 @@ export default function DataAI() {
   const pct = Math.round((done / total) * 100)
 
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="Данные & AI" />
-        <main className="flex-1 p-6 space-y-6">
+    <div className="space-y-6">
 
           {/* Score */}
           <div className="grid grid-cols-3 gap-4">
@@ -161,8 +155,6 @@ export default function DataAI() {
             </div>
           </div>
 
-        </main>
-      </div>
     </div>
   )
 }

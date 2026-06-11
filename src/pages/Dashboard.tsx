@@ -1,6 +1,4 @@
 import { AlertTriangle, Clock, FileText, TrendingUp, Shield, Database, Building2 } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 import TaskCard from '../components/TaskCard'
 const tasks = [
   {
@@ -63,11 +61,7 @@ function getDocLabel(status: string) {
 
 export default function Dashboard() {
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="Дашборд" />
-        <main className="flex-1 p-6 space-y-6">
+    <div className="space-y-6">
 
           {/* Risk overview */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -147,8 +141,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-        </main>
-      </div>
     </div>
   )
 }

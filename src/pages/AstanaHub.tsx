@@ -1,6 +1,4 @@
 import { CheckCircle, AlertTriangle, Building2, Calendar, TrendingUp } from 'lucide-react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 
 const eligibilityItems = [
   { title: 'Зарегистрирована в Казахстане', done: true },
@@ -47,11 +45,7 @@ export default function AstanaHub() {
   const avgIct = Math.round(revenueData.reduce((s, d) => s + d.ict, 0) / revenueData.length)
 
   return (
-    <div className="flex bg-slate-950 min-h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header title="Astana Hub" />
-        <main className="flex-1 p-6 space-y-6">
+    <div className="space-y-6">
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
@@ -167,8 +161,6 @@ export default function AstanaHub() {
             </div>
           </div>
 
-        </main>
-      </div>
     </div>
   )
 }
