@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import { CheckCircle, ArrowRight, Phone } from 'lucide-react'
+import SocialFloat from '../components/SocialFloat'
+import Assistant from '../components/Assistant'
 
 const problems = [
   'Инвестор задаёт вопросы — нечего показать',
@@ -170,6 +172,8 @@ export default function Landing() {
         </div>
       </footer>
 
+      <SocialFloat />
+      <Assistant />
     </div>
   )
 }

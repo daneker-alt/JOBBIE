@@ -1,6 +1,8 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
+import SocialFloat from './components/SocialFloat'
+import Assistant from './components/Assistant'
 import Landing from './pages/Landing'
 import Dashboard from './pages/Dashboard'
 import LegalScan from './pages/LegalScan'
@@ -30,10 +32,12 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header title={title} />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 bg-[#F3F5F7] overflow-y-auto p-6">
           {children}
         </main>
       </div>
+      <SocialFloat />
+      <Assistant />
     </div>
   )
 }
