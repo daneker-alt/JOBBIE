@@ -31,7 +31,7 @@ function SensitivityBadge({ level }: { level: string }) {
     high: 'text-red-400 bg-red-500/10 border-red-500/20',
     medium: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
     low: 'text-green-400 bg-green-500/10 border-green-500/20',
-  }[level] || 'text-slate-400 bg-slate-700/30 border-slate-600'
+  }[level] || 'text-gray-500 bg-gray-100 border-gray-300'
   const labels: Record<string, string> = { high: 'Высокая', medium: 'Средняя', low: 'Низкая' }
   return <span className={`text-xs border px-2 py-0.5 rounded-full ${conf}`}>{labels[level]}</span>
 }
@@ -46,30 +46,30 @@ export default function DataAI() {
 
           {/* Score */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div className="text-slate-400 text-xs mb-1">Privacy Compliance</div>
-              <div className="text-2xl font-bold text-white">{pct}%</div>
-              <div className="w-full bg-slate-700 rounded-full h-1.5 mt-2">
-                <div className="bg-indigo-500 h-1.5 rounded-full" style={{ width: `${pct}%` }} />
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="text-gray-500 text-xs mb-1">Privacy Compliance</div>
+              <div className="text-2xl font-bold text-[#0B2D6B]">{pct}%</div>
+              <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div className="bg-[#0B2D6B] h-1.5 rounded-full" style={{ width: `${pct}%` }} />
               </div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div className="text-slate-400 text-xs mb-1">Датасеты</div>
-              <div className="text-2xl font-bold text-white">{datasets.length}</div>
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="text-gray-500 text-xs mb-1">Датасеты</div>
+              <div className="text-2xl font-bold text-[#0B2D6B]">{datasets.length}</div>
               <div className="text-red-400 text-xs mt-1">{datasets.filter(d => d.status === 'risk').length} риска</div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div className="text-slate-400 text-xs mb-1">AI Disclaimers</div>
-              <div className="text-2xl font-bold text-white">{aiDisclaimers.filter(d => d.done).length}/{aiDisclaimers.length}</div>
-              <div className="text-slate-500 text-xs mt-1">готово</div>
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="text-gray-500 text-xs mb-1">AI Disclaimers</div>
+              <div className="text-2xl font-bold text-[#0B2D6B]">{aiDisclaimers.filter(d => d.done).length}/{aiDisclaimers.length}</div>
+              <div className="text-gray-400 text-xs mt-1">готово</div>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6">
             {/* Privacy Checklist */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2">
-                <Shield size={16} className="text-indigo-400" /> Privacy Checklist
+            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+              <h2 className="text-[#1F2937] font-semibold mb-4 flex items-center gap-2">
+                <Shield size={16} className="text-[#0B2D6B]" /> Privacy Checklist
               </h2>
               <div className="space-y-3">
                 {privacyItems.map(item => (
@@ -78,8 +78,8 @@ export default function DataAI() {
                       ? <CheckCircle size={16} className="text-green-400 mt-0.5 shrink-0" />
                       : <AlertTriangle size={16} className="text-yellow-400 mt-0.5 shrink-0" />}
                     <div>
-                      <div className="text-slate-300 text-sm font-medium">{item.title}</div>
-                      <div className="text-slate-500 text-xs">{item.desc}</div>
+                      <div className="text-gray-700 text-sm font-medium">{item.title}</div>
+                      <div className="text-gray-400 text-xs">{item.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -88,15 +88,15 @@ export default function DataAI() {
 
             {/* AI Disclaimers */}
             <div className="space-y-4">
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <h2 className="text-slate-200 font-semibold mb-4">AI Disclaimers</h2>
+              <div className="bg-white border border-gray-200 rounded-2xl p-6">
+                <h2 className="text-[#1F2937] font-semibold mb-4">AI Disclaimers</h2>
                 <div className="space-y-3">
                   {aiDisclaimers.map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
                       {item.done
                         ? <CheckCircle size={16} className="text-green-400 shrink-0" />
                         : <AlertTriangle size={16} className="text-yellow-400 shrink-0" />}
-                      <span className={`text-sm ${item.done ? 'text-slate-300' : 'text-slate-400'}`}>{item.title}</span>
+                      <span className={`text-sm ${item.done ? 'text-gray-700' : 'text-gray-500'}`}>{item.title}</span>
                     </div>
                   ))}
                 </div>
@@ -119,30 +119,30 @@ export default function DataAI() {
           </div>
 
           {/* Dataset Registry */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-800 flex items-center gap-2">
-              <Database size={16} className="text-indigo-400" />
-              <h2 className="text-slate-200 font-semibold">Реестр датасетов</h2>
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-2">
+              <Database size={16} className="text-[#0B2D6B]" />
+              <h2 className="text-[#1F2937] font-semibold">Реестр датасетов</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-800">
+                  <tr className="border-b border-gray-200">
                     {['Датасет', 'Размер', 'Чувствительность', 'Согласие', 'Локация', 'Статус'].map(h => (
-                      <th key={h} className="text-left text-slate-500 font-medium px-4 py-3">{h}</th>
+                      <th key={h} className="text-left text-gray-400 font-medium px-4 py-3">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {datasets.map(ds => (
-                    <tr key={ds.name} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
-                      <td className="px-4 py-3 text-slate-300 font-medium">{ds.name}</td>
-                      <td className="px-4 py-3 text-slate-400">{ds.size}</td>
+                    <tr key={ds.name} className="border-b border-gray-100 hover:bg-gray-100/30 transition-colors">
+                      <td className="px-4 py-3 text-gray-700 font-medium">{ds.name}</td>
+                      <td className="px-4 py-3 text-gray-500">{ds.size}</td>
                       <td className="px-4 py-3"><SensitivityBadge level={ds.sensitivity} /></td>
                       <td className="px-4 py-3">
                         <span className={ds.consent === 'Да' ? 'text-green-400' : 'text-yellow-400'}>{ds.consent}</span>
                       </td>
-                      <td className="px-4 py-3 text-slate-400 text-xs">{ds.location}</td>
+                      <td className="px-4 py-3 text-gray-500 text-xs">{ds.location}</td>
                       <td className="px-4 py-3">
                         {ds.status === 'risk'
                           ? <span className="text-red-400 text-xs flex items-center gap-1"><AlertTriangle size={12} /> Риск</span>

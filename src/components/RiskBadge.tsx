@@ -1,30 +1,13 @@
-interface RiskBadgeProps {
-  score: number
-  size?: 'sm' | 'md' | 'lg'
-}
+interface RiskBadgeProps { score: number; size?: 'sm' | 'md' | 'lg'; label?: string }
 
-export default function RiskBadge({ score, size = 'sm' }: RiskBadgeProps) {
-  const getColor = (s: number) => {
-    if (s >= 75) return 'text-green-400 bg-green-500/20 border-green-500/30'
-    if (s >= 50) return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30'
-    return 'text-red-400 bg-red-500/20 border-red-500/30'
-  }
-
-  const getLabel = (s: number) => {
-    if (s >= 75) return 'Низкий риск'
-    if (s >= 50) return 'Средний риск'
-    return 'Высокий риск'
-  }
-
-  const sizeClasses = {
-    sm: 'text-xs px-2 py-1',
-    md: 'text-sm px-3 py-1.5',
-    lg: 'text-base px-4 py-2',
-  }
-
+export default function RiskBadge({ score, size = 'md', label }: RiskBadgeProps) {
+  const color = score >= 75 ? 'text-green-700 bg-green-100 border-green-200'
+    : score >= 50 ? 'text-orange-700 bg-orange-100 border-orange-200'
+    : 'text-red-700 bg-red-100 border-red-200'
+  const text = size === 'sm' ? 'text-xs' : 'text-sm'
   return (
-    <span className={`border rounded-full font-semibold ${getColor(score)} ${sizeClasses[size]}`}>
-      {score}/100 · {getLabel(score)}
+    <span className={`border rounded-full font-semibold px-2.5 py-0.5 ${color} ${text}`}>
+      {label ?? `${score}/100`}
     </span>
   )
 }

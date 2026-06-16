@@ -34,7 +34,7 @@ const riskCategories = [
 function getDocStatus(status: string) {
   if (status === 'ready') return 'text-green-400 bg-green-500/10 border-green-500/20'
   if (status === 'pending') return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20'
-  return 'text-slate-400 bg-slate-700/30 border-slate-600/30'
+  return 'text-gray-500 bg-gray-100 border-gray-200'
 }
 function getDocLabel(status: string) {
   if (status === 'ready') return 'Готов'
@@ -53,11 +53,11 @@ export default function Dashboard() {
           return (
             <div key={label} className={`${bg} border ${border} rounded-xl p-4`}>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-slate-400 text-xs font-medium">{label}</span>
-                <Icon size={14} className="text-slate-500" />
+                <span className="text-gray-500 text-xs font-medium">{label}</span>
+                <Icon size={14} className="text-gray-400" />
               </div>
               <div className={`text-2xl font-bold ${color}`}>{score}</div>
-              <div className="w-full bg-slate-700 rounded-full h-1 mt-2">
+              <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
                 <div className={`h-1 rounded-full ${score >= 75 ? 'bg-green-500' : score >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${score}%` }} />
               </div>
             </div>
@@ -68,22 +68,22 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-slate-200 font-semibold">Legal Backlog</h2>
-            <span className="text-slate-500 text-sm">{tasks.length} задачи</span>
+            <h2 className="text-[#1F2937] font-semibold">Legal Backlog</h2>
+            <span className="text-gray-400 text-sm">{tasks.length} задачи</span>
           </div>
           {tasks.map((task, i) => <TaskCard key={i} {...task} />)}
         </div>
 
         <div>
-          <h2 className="text-slate-200 font-semibold mb-4">Compliance Calendar</h2>
+          <h2 className="text-[#1F2937] font-semibold mb-4">Compliance Calendar</h2>
           <div className="space-y-3">
             {calendar.map(({ date, event, urgent }) => (
-              <div key={date} className={`bg-slate-800/60 border rounded-xl p-3 ${urgent ? 'border-red-500/30' : 'border-slate-700'}`}>
+              <div key={date} className={`bg-white border rounded-xl p-3 ${urgent ? 'border-red-500/30' : 'border-gray-200'}`}>
                 <div className="flex items-start gap-2">
-                  {urgent ? <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" /> : <Clock size={14} className="text-slate-500 mt-0.5 shrink-0" />}
+                  {urgent ? <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" /> : <Clock size={14} className="text-gray-400 mt-0.5 shrink-0" />}
                   <div>
-                    <div className="text-slate-400 text-xs mb-0.5">{date}</div>
-                    <div className="text-slate-300 text-sm">{event}</div>
+                    <div className="text-gray-500 text-xs mb-0.5">{date}</div>
+                    <div className="text-gray-700 text-sm">{event}</div>
                   </div>
                 </div>
               </div>
@@ -94,17 +94,17 @@ export default function Dashboard() {
 
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-slate-200 font-semibold">Document Map</h2>
-          <span className="text-slate-500 text-sm">{documents.filter(d => d.status === 'ready').length} из {documents.length} готовы</span>
+          <h2 className="text-[#1F2937] font-semibold">Document Map</h2>
+          <span className="text-gray-400 text-sm">{documents.filter(d => d.status === 'ready').length} из {documents.length} готовы</span>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
           {documents.map(({ name, status, type }) => (
-            <div key={name} className="bg-slate-800/60 border border-slate-700 rounded-xl p-4 flex items-center justify-between">
+            <div key={name} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <FileText size={16} className="text-slate-500" />
+                <FileText size={16} className="text-gray-400" />
                 <div>
-                  <div className="text-slate-300 text-sm font-medium">{name}</div>
-                  <div className="text-slate-500 text-xs">{type}</div>
+                  <div className="text-gray-700 text-sm font-medium">{name}</div>
+                  <div className="text-gray-400 text-xs">{type}</div>
                 </div>
               </div>
               <span className={`text-xs border px-2 py-0.5 rounded-full ${getDocStatus(status)}`}>{getDocLabel(status)}</span>

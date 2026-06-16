@@ -67,7 +67,7 @@ const documents = [
 function DocStatus({ status }: { status: string }) {
   if (status === 'signed') return <span className="text-green-400 text-xs border border-green-500/20 bg-green-500/10 px-2 py-0.5 rounded-full">Подписан</span>
   if (status === 'ready') return <span className="text-blue-400 text-xs border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 rounded-full">Готов</span>
-  return <span className="text-slate-400 text-xs border border-slate-600/30 bg-slate-700/30 px-2 py-0.5 rounded-full">Черновик</span>
+  return <span className="text-gray-500 text-xs border border-gray-200 bg-gray-100 px-2 py-0.5 rounded-full">Черновик</span>
 }
 
 export default function InvestorRoom() {
@@ -81,68 +81,68 @@ export default function InvestorRoom() {
           {/* Score */}
           <div className="grid grid-cols-3 gap-4">
             <div className={`border rounded-xl p-4 ${readinessScore >= 75 ? 'bg-green-500/5 border-green-500/20' : readinessScore >= 50 ? 'bg-yellow-500/5 border-yellow-500/20' : 'bg-red-500/5 border-red-500/20'}`}>
-              <div className="text-slate-400 text-xs mb-1">Готовность к DD</div>
+              <div className="text-gray-500 text-xs mb-1">Готовность к DD</div>
               <div className={`text-3xl font-bold ${readinessScore >= 75 ? 'text-green-400' : readinessScore >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
                 {readinessScore}%
               </div>
-              <div className="w-full bg-slate-700 rounded-full h-1.5 mt-2">
+              <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
                 <div className={`h-1.5 rounded-full ${readinessScore >= 75 ? 'bg-green-500' : readinessScore >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${readinessScore}%` }} />
               </div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div className="text-slate-400 text-xs mb-1">DD Checklist</div>
-              <div className="text-2xl font-bold text-white">{doneItems}/{totalItems}</div>
-              <div className="text-slate-500 text-xs mt-1">пунктов выполнено</div>
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="text-gray-500 text-xs mb-1">DD Checklist</div>
+              <div className="text-2xl font-bold text-[#0B2D6B]">{doneItems}/{totalItems}</div>
+              <div className="text-gray-400 text-xs mt-1">пунктов выполнено</div>
             </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <div className="text-slate-400 text-xs mb-1">Документов</div>
-              <div className="text-2xl font-bold text-white">{documents.filter(d => d.status !== 'draft').length}/{documents.length}</div>
-              <div className="text-slate-500 text-xs mt-1">готово / всего</div>
+            <div className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="text-gray-500 text-xs mb-1">Документов</div>
+              <div className="text-2xl font-bold text-[#0B2D6B]">{documents.filter(d => d.status !== 'draft').length}/{documents.length}</div>
+              <div className="text-gray-400 text-xs mt-1">готово / всего</div>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Cap Table */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2">
-                <Users size={16} className="text-indigo-400" /> Cap Table
+            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+              <h2 className="text-[#1F2937] font-semibold mb-4 flex items-center gap-2">
+                <Users size={16} className="text-[#0B2D6B]" /> Cap Table
               </h2>
               <div className="space-y-3">
                 {capTable.map(({ name, role, equity, type }) => (
                   <div key={name}>
                     <div className="flex justify-between items-start mb-1">
                       <div>
-                        <div className="text-slate-300 text-sm font-medium">{name}</div>
-                        <div className="text-slate-500 text-xs">{role}</div>
+                        <div className="text-gray-700 text-sm font-medium">{name}</div>
+                        <div className="text-gray-400 text-xs">{role}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-indigo-400 font-bold">{equity}%</div>
-                        <div className="text-slate-600 text-xs">{type}</div>
+                        <div className="text-[#0B2D6B] font-bold">{equity}%</div>
+                        <div className="text-gray-500 text-xs">{type}</div>
                       </div>
                     </div>
-                    <div className="w-full bg-slate-700 rounded-full h-1.5">
-                      <div className="bg-indigo-500 h-1.5 rounded-full" style={{ width: `${equity}%` }} />
+                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                      <div className="bg-[#0B2D6B] h-1.5 rounded-full" style={{ width: `${equity}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="border-t border-slate-700 mt-4 pt-3 flex justify-between text-sm">
-                <span className="text-slate-400">Итого</span>
-                <span className="text-white font-bold">100%</span>
+              <div className="border-t border-gray-200 mt-4 pt-3 flex justify-between text-sm">
+                <span className="text-gray-500">Итого</span>
+                <span className="text-[#0B2D6B] font-bold">100%</span>
               </div>
             </div>
 
             {/* Documents */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2">
-                <FileText size={16} className="text-indigo-400" /> Data Room
+            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+              <h2 className="text-[#1F2937] font-semibold mb-4 flex items-center gap-2">
+                <FileText size={16} className="text-[#0B2D6B]" /> Data Room
               </h2>
               <div className="space-y-3">
                 {documents.map(({ name, status, date }) => (
                   <div key={name} className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="text-slate-300 text-sm">{name}</div>
-                      {date && <div className="text-slate-500 text-xs">{date}</div>}
+                      <div className="text-gray-700 text-sm">{name}</div>
+                      {date && <div className="text-gray-400 text-xs">{date}</div>}
                     </div>
                     <DocStatus status={status} />
                   </div>
@@ -151,9 +151,9 @@ export default function InvestorRoom() {
             </div>
 
             {/* DD Summary */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2">
-                <TrendingUp size={16} className="text-indigo-400" /> DD Summary
+            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+              <h2 className="text-[#1F2937] font-semibold mb-4 flex items-center gap-2">
+                <TrendingUp size={16} className="text-[#0B2D6B]" /> DD Summary
               </h2>
               <div className="space-y-3">
                 {ddCategories.map(({ name, items }) => {
@@ -164,10 +164,10 @@ export default function InvestorRoom() {
                   return (
                     <div key={name}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-slate-400">{name}</span>
+                        <span className="text-gray-500">{name}</span>
                         <span className={textColor}>{done}/{items.length}</span>
                       </div>
-                      <div className="w-full bg-slate-700 rounded-full h-1.5">
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
                         <div className={`h-1.5 rounded-full ${color}`} style={{ width: `${pct}%` }} />
                       </div>
                     </div>
@@ -178,19 +178,19 @@ export default function InvestorRoom() {
           </div>
 
           {/* DD Checklist detail */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-            <h2 className="text-slate-200 font-semibold mb-5">Детальный DD Checklist</h2>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <h2 className="text-[#1F2937] font-semibold mb-5">Детальный DD Checklist</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {ddCategories.map(({ name, items }) => (
                 <div key={name}>
-                  <h3 className="text-indigo-400 text-sm font-semibold mb-3">{name}</h3>
+                  <h3 className="text-[#0B2D6B] text-sm font-semibold mb-3">{name}</h3>
                   <div className="space-y-2">
                     {items.map((item, i) => (
                       <div key={i} className="flex items-start gap-2">
                         {item.done
                           ? <CheckCircle size={13} className="text-green-400 mt-0.5 shrink-0" />
                           : <AlertTriangle size={13} className="text-yellow-400 mt-0.5 shrink-0" />}
-                        <span className={`text-xs ${item.done ? 'text-slate-300' : 'text-slate-400'}`}>{item.title}</span>
+                        <span className={`text-xs ${item.done ? 'text-gray-700' : 'text-gray-500'}`}>{item.title}</span>
                       </div>
                     ))}
                   </div>

@@ -67,7 +67,7 @@ const steps = [
 const statusConfig = {
   done: { label: 'Завершён', cls: 'text-green-400 bg-green-500/10 border-green-500/20' },
   'in-progress': { label: 'В работе', cls: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
-  pending: { label: 'Ожидает', cls: 'text-slate-400 bg-slate-700/30 border-slate-600/30' },
+  pending: { label: 'Ожидает', cls: 'text-gray-500 bg-gray-100 border-gray-200' },
 }
 
 export default function ClientJourney() {
@@ -76,26 +76,26 @@ export default function ClientJourney() {
 
   return (
     <div>
-      <div className="flex items-center gap-6 mb-8 p-4 bg-slate-900 border border-slate-800 rounded-xl">
+      <div className="flex items-center gap-6 mb-8 p-4 bg-white border border-gray-200 rounded-xl">
         <div className="text-center">
           <div className="text-2xl font-bold text-green-400">{doneCount}</div>
-          <div className="text-slate-500 text-xs">Завершено</div>
+          <div className="text-gray-400 text-xs">Завершено</div>
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold text-yellow-400">{inProgressCount}</div>
-          <div className="text-slate-500 text-xs">В работе</div>
+          <div className="text-gray-400 text-xs">В работе</div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-slate-400">{steps.length - doneCount - inProgressCount}</div>
-          <div className="text-slate-500 text-xs">Ожидает</div>
+          <div className="text-2xl font-bold text-gray-500">{steps.length - doneCount - inProgressCount}</div>
+          <div className="text-gray-400 text-xs">Ожидает</div>
         </div>
         <div className="flex-1">
           <div className="flex justify-between text-xs mb-1">
-            <span className="text-slate-400">Общий прогресс</span>
-            <span className="text-indigo-400">{Math.round(((doneCount + inProgressCount * 0.5) / steps.length) * 100)}%</span>
+            <span className="text-gray-500">Общий прогресс</span>
+            <span className="text-[#0B2D6B]">{Math.round(((doneCount + inProgressCount * 0.5) / steps.length) * 100)}%</span>
           </div>
-          <div className="w-full bg-slate-700 rounded-full h-2">
-            <div className="bg-indigo-500 h-2 rounded-full" style={{ width: `${Math.round(((doneCount + inProgressCount * 0.5) / steps.length) * 100)}%` }} />
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-[#0B2D6B] h-2 rounded-full" style={{ width: `${Math.round(((doneCount + inProgressCount * 0.5) / steps.length) * 100)}%` }} />
           </div>
         </div>
       </div>
@@ -111,48 +111,48 @@ export default function ClientJourney() {
                 <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 ${
                   step.status === 'done' ? 'border-green-500 bg-green-500/10' :
                   step.status === 'in-progress' ? 'border-yellow-500 bg-yellow-500/10' :
-                  'border-slate-700 bg-slate-800'
+                  'border-gray-200 bg-gray-100'
                 }`}>
                   {step.status === 'done'
                     ? <CheckCircle size={18} className="text-green-400" />
                     : step.status === 'in-progress'
                     ? <div className="w-3 h-3 rounded-full bg-yellow-400 animate-pulse" />
-                    : <Circle size={18} className="text-slate-600" />}
+                    : <Circle size={18} className="text-gray-500" />}
                 </div>
-                {!isLast && <div className="w-0.5 h-full bg-slate-800 mt-2" />}
+                {!isLast && <div className="w-0.5 h-full bg-gray-100 mt-2" />}
               </div>
 
-              <div className={`flex-1 mb-4 bg-slate-900 border rounded-2xl p-5 transition-colors ${
+              <div className={`flex-1 mb-4 bg-white border rounded-2xl p-5 transition-colors ${
                 step.status === 'done' ? 'border-green-500/20' :
                 step.status === 'in-progress' ? 'border-yellow-500/20' :
-                'border-slate-800'
+                'border-gray-200'
               }`}>
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                       step.status === 'done' ? 'bg-green-500/10' :
                       step.status === 'in-progress' ? 'bg-yellow-500/10' :
-                      'bg-slate-800'
+                      'bg-gray-100'
                     }`}>
                       <Icon size={16} className={
                         step.status === 'done' ? 'text-green-400' :
                         step.status === 'in-progress' ? 'text-yellow-400' :
-                        'text-slate-500'
+                        'text-gray-400'
                       } />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-slate-500 text-xs font-mono">{step.num}. {step.stage}</span>
+                        <span className="text-gray-400 text-xs font-mono">{step.num}. {step.stage}</span>
                       </div>
-                      <h3 className="text-white font-semibold">{step.title}</h3>
-                      <p className="text-slate-400 text-sm mt-0.5">{step.desc}</p>
+                      <h3 className="text-[#0B2D6B] font-semibold">{step.title}</h3>
+                      <p className="text-gray-500 text-sm mt-0.5">{step.desc}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <span className={`text-xs border px-2.5 py-1 rounded-full ${conf.cls}`}>{conf.label}</span>
                     <Link
                       to={step.path}
-                      className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-xs transition-colors"
+                      className="flex items-center gap-1 text-[#0B2D6B] hover:text-[#0B2D6B] text-xs transition-colors"
                     >
                       Открыть <ArrowRight size={12} />
                     </Link>
@@ -161,9 +161,9 @@ export default function ClientJourney() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {step.docs.map(doc => (
-                    <div key={doc} className="flex items-center gap-1.5 bg-slate-800/50 rounded-lg px-2.5 py-1.5">
-                      <FileText size={11} className="text-slate-500 shrink-0" />
-                      <span className="text-slate-400 text-xs truncate">{doc}</span>
+                    <div key={doc} className="flex items-center gap-1.5 bg-gray-50 rounded-lg px-2.5 py-1.5">
+                      <FileText size={11} className="text-gray-400 shrink-0" />
+                      <span className="text-gray-500 text-xs truncate">{doc}</span>
                     </div>
                   ))}
                 </div>
