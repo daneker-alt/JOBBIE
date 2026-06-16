@@ -1,185 +1,175 @@
 import { Link } from 'react-router-dom'
-import { Shield, Search, Building2, TrendingUp, CheckCircle, ArrowRight, Phone } from 'lucide-react'
+import { CheckCircle, ArrowRight, Phone } from 'lucide-react'
 
-const features = [
-  { icon: Search, title: 'Legal Scan', desc: 'Анкета за 10 минут — карта рисков и legal roadmap для вашего стартапа.' },
-  { icon: Shield, title: 'IP & Data', desc: 'IP assignment, privacy policy, consent — защита вашего продукта и данных.' },
-  { icon: Building2, title: 'Astana Hub', desc: 'Eligibility check, структура 90/10, compliance calendar и отчётность.' },
-  { icon: TrendingUp, title: 'Investor Ready', desc: 'Cap table, SAFE/SHA, data room и DD checklist для инвестора.' },
+const problems = [
+  'Инвестор задаёт вопросы — нечего показать',
+  'Подрядчик ушёл с кодом — права не оформлены',
+  'Клиент не платит — договора нет',
+  'Astana Hub отказал — не та структура выручки',
+]
+
+const results = [
+  { num: '10', label: 'минут', desc: 'Legal Scan — карта ваших рисков' },
+  { num: '2', label: 'недели', desc: 'Roadmap + базовые документы' },
+  { num: '1', label: 'кабинет', desc: 'Всё в одном месте: задачи, дедлайны, документы' },
+]
+
+const steps = [
+  { n: '1', title: 'Scan', desc: 'Заполняете анкету — получаете карту рисков и план' },
+  { n: '2', title: 'Fix', desc: 'Юрист закрывает задачи: IP, данные, договоры, Hub' },
+  { n: '3', title: 'Grow', desc: 'Продаёте, привлекаете инвестиции, масштабируетесь' },
 ]
 
 const packages = [
-  { name: 'Legal Sprint', period: '1–2 недели', desc: 'Legal scan, roadmap, базовые документы', price: 'от 300 000 ₸' },
-  { name: 'Astana Hub Track', period: 'разово', desc: 'Eligibility, 90/10, заявка, compliance', price: 'от 200 000 ₸' },
-  { name: 'AI / IP / Data', period: 'разово', desc: 'IP chain, privacy, dataset risk, AI terms', price: 'от 250 000 ₸' },
-  { name: 'Sales Contracts', period: 'разово', desc: 'MSA, SaaS, SLA, pilot/POC, invoices', price: 'от 150 000 ₸' },
-  { name: 'Investor Ready', period: 'разово', desc: 'Data room, SAFE/SHA, DD answers', price: 'от 350 000 ₸' },
-  { name: 'Monthly LegalOps', period: 'в месяц', desc: 'Кабинет, задачи, мониторинг, Q&A', price: 'от 200 000 ₸' },
-]
-
-const journey = [
-  { num: 1, stage: 'Idea', action: 'Legal Scan' },
-  { num: 2, stage: 'MVP', action: 'IP + Data' },
-  { num: 3, stage: 'Pilot', action: 'POC / SLA' },
-  { num: 4, stage: 'Hub', action: '90/10' },
-  { num: 5, stage: 'Sales', action: 'Contracts' },
-  { num: 6, stage: 'Invest', action: 'Data Room' },
+  { name: 'Legal Sprint', price: 'от 300 000 ₸', desc: '1–2 недели. Scan + roadmap + первичные документы. Стартовая точка.' },
+  { name: 'Monthly LegalOps', price: 'от 200 000 ₸/мес', desc: 'Постоянный кабинет, задачи, мониторинг. Юрист как часть команды.', highlight: true },
+  { name: 'Investor Ready', price: 'от 350 000 ₸', desc: 'Cap table, data room, SAFE/SHA. Готовность к DD за 3–4 недели.' },
 ]
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 sticky top-0 bg-white z-10">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="text-2xl font-bold">
+    <div className="min-h-screen bg-white font-sans">
+
+      {/* Nav */}
+      <nav className="sticky top-0 bg-white border-b border-gray-100 z-10">
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="text-xl font-bold">
             <span className="text-[#0B2D6B]">Lex</span><span className="text-[#16A334]">.ON</span>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm text-gray-600">
-            <a href="#features" className="hover:text-[#0B2D6B] transition-colors">Услуги</a>
-            <a href="#packages" className="hover:text-[#0B2D6B] transition-colors">Пакеты</a>
-            <a href="#journey" className="hover:text-[#0B2D6B] transition-colors">Как работаем</a>
-          </div>
-          <a href="tel:+77017976342" className="bg-[#16A334] hover:bg-[#138a2c] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">Связаться</a>
+          <a href="tel:+77017976342"
+            className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#0B2D6B] transition-colors">
+            <Phone size={14} /> +7 701 797 63 42
+          </a>
+          <Link to="/scan"
+            className="bg-[#16A334] hover:bg-[#138a2c] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+            Начать бесплатно
+          </Link>
         </div>
       </nav>
 
-      <section className="max-w-6xl mx-auto px-6 py-20 flex items-center gap-16">
-        <div className="flex-1">
-          <div className="inline-flex items-center gap-2 bg-[#F3F5F7] border border-gray-200 rounded-full px-4 py-1.5 text-sm text-[#0B2D6B] font-medium mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#16A334]" />
-            Юридическое сопровождение как IT-продукт
-          </div>
-          <h1 className="text-5xl font-bold text-[#0B2D6B] leading-tight mb-6">
-            Правовая защита<br />для ваших инноваций
-          </h1>
-          <p className="text-gray-500 text-xl mb-8 leading-relaxed">
-            Lex.ON помогает IT и AI командам запускаться и расти без правовых рисков — от идеи и MVP до Astana Hub, IP, данных и инвестиций.
+      {/* Hero */}
+      <section className="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
+        <p className="text-[#16A334] font-semibold text-sm mb-4 tracking-wide uppercase">
+          Юридическое сопровождение для AI/IT стартапов Казахстана
+        </p>
+        <h1 className="text-5xl md:text-6xl font-bold text-[#0B2D6B] leading-tight mb-6">
+          Вы строите продукт.<br />
+          <span className="text-[#16A334]">Мы защищаем его.</span>
+        </h1>
+        <p className="text-gray-500 text-xl mb-10 max-w-xl mx-auto leading-relaxed">
+          IP, данные, договоры, Astana Hub и инвестиционная готовность — всё в одном кабинете.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link to="/scan"
+            className="bg-[#16A334] hover:bg-[#138a2c] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors flex items-center justify-center gap-2">
+            Пройти Legal Scan <ArrowRight size={18} />
+          </Link>
+          <a href="tel:+77017976342"
+            className="border-2 border-[#0B2D6B] text-[#0B2D6B] hover:bg-[#0B2D6B] hover:text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors">
+            Позвонить
+          </a>
+        </div>
+      </section>
+
+      {/* Pain */}
+      <section className="bg-[#F3F5F7] py-14">
+        <div className="max-w-5xl mx-auto px-6">
+          <p className="text-center text-gray-400 text-sm font-semibold uppercase tracking-wide mb-8">
+            Это уже случилось с другими стартапами
           </p>
-          <div className="flex gap-4">
-            <Link to="/scan" className="bg-[#16A334] hover:bg-[#138a2c] text-white font-semibold px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
-              Получить Legal Scan <ArrowRight size={16} />
-            </Link>
-            <a href="#features" className="border-2 border-[#0B2D6B] text-[#0B2D6B] hover:bg-[#0B2D6B] hover:text-white font-semibold px-6 py-3 rounded-lg transition-colors">
-              Наши услуги
-            </a>
+          <div className="grid md:grid-cols-2 gap-3">
+            {problems.map(p => (
+              <div key={p} className="bg-white border border-gray-200 rounded-xl px-5 py-4 flex items-start gap-3">
+                <span className="text-red-500 text-lg shrink-0 mt-0.5">×</span>
+                <span className="text-gray-700 text-sm">{p}</span>
+              </div>
+            ))}
           </div>
-        </div>
-        <div className="hidden lg:flex items-end gap-3 h-64 shrink-0">
-          {[80,120,100,140,90,160,110,150,85,130].map((h, i) => (
-            <div key={i} className="w-8 rounded-t-md" style={{ height: `${h}px`, backgroundColor: i % 2 === 0 ? '#0B2D6B' : '#16A334' }} />
-          ))}
+          <p className="text-center text-[#0B2D6B] font-semibold mt-8">
+            С Lex.ON вы узнаёте о рисках до того, как они стали проблемой.
+          </p>
         </div>
       </section>
 
+      {/* Results */}
+      <section className="py-16">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            {results.map(({ num, label, desc }) => (
+              <div key={num}>
+                <div className="text-5xl font-bold text-[#0B2D6B] leading-none">{num}</div>
+                <div className="text-[#16A334] font-bold text-lg mb-2">{label}</div>
+                <div className="text-gray-500 text-sm">{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="bg-[#0B2D6B] py-16">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-white text-3xl font-bold text-center mb-12">Как это работает</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {steps.map(({ n, title, desc }) => (
+              <div key={n} className="text-center">
+                <div className="w-12 h-12 rounded-full bg-[#16A334] text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
+                  {n}
+                </div>
+                <div className="text-white font-bold text-lg mb-2">{title}</div>
+                <div className="text-white/60 text-sm leading-relaxed">{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Packages */}
+      <section className="py-16">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-3xl font-bold text-[#0B2D6B] text-center mb-3">Пакеты</h2>
+          <p className="text-gray-400 text-center mb-10">Выберите что нужно сейчас. Можно комбинировать.</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {packages.map(({ name, price, desc, highlight }) => (
+              <div key={name} className={`rounded-2xl p-6 border-2 transition-all ${highlight ? 'border-[#0B2D6B] bg-[#0B2D6B] text-white' : 'border-gray-200 bg-white hover:border-[#0B2D6B]'}`}>
+                {highlight && <div className="text-[#16A334] text-xs font-bold uppercase tracking-wide mb-2">Популярный</div>}
+                <h3 className={`font-bold text-lg mb-1 ${highlight ? 'text-white' : 'text-[#0B2D6B]'}`}>{name}</h3>
+                <div className={`text-2xl font-bold mb-3 ${highlight ? 'text-[#16A334]' : 'text-[#16A334]'}`}>{price}</div>
+                <p className={`text-sm leading-relaxed ${highlight ? 'text-white/70' : 'text-gray-500'}`}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
       <section className="bg-[#F3F5F7] py-16">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8">
-          <div className="bg-white border border-gray-200 rounded-2xl p-8">
-            <div className="text-gray-400 text-sm font-semibold uppercase tracking-wide mb-4">Классическая модель</div>
-            <ul className="space-y-3">
-              {['Юрист подключается поздно','Документы хранятся хаотично','Риски видны только после проблемы','Стартап не готов к инвестору'].map(t => (
-                <li key={t} className="flex items-center gap-3 text-sm text-gray-600">
-                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0">✕</span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="bg-[#0B2D6B] rounded-2xl p-8">
-            <div className="text-[#16A334] text-sm font-semibold uppercase tracking-wide mb-4">Lex.ON модель</div>
-            <ul className="space-y-3">
-              {['Единый workspace для команды','Документы как продуктовые артефакты','Risk score, дедлайны и трек задач','Готовность к продажам, Hub и DD'].map(t => (
-                <li key={t} className="flex items-center gap-3 text-sm text-white">
-                  <CheckCircle size={16} className="text-[#16A334] shrink-0" />{t}
-                </li>
-              ))}
-            </ul>
+        <div className="max-w-xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-[#0B2D6B] mb-4">Начните с Legal Scan</h2>
+          <p className="text-gray-500 mb-8">10 минут — и вы знаете где риски и что делать дальше.</p>
+          <Link to="/scan"
+            className="inline-flex items-center gap-2 bg-[#16A334] hover:bg-[#138a2c] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors mb-6">
+            Пройти Legal Scan <ArrowRight size={18} />
+          </Link>
+          <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
+            <CheckCircle size={14} className="text-[#16A334]" /> Без предоплаты
+            <CheckCircle size={14} className="text-[#16A334]" /> Результат за 2 недели
+            <CheckCircle size={14} className="text-[#16A334]" /> Фиксированная цена
           </div>
         </div>
       </section>
 
-      <section id="features" className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#0B2D6B] mb-3">Что входит в платформу</h2>
-            <p className="text-gray-500">Юридические риски превращаются в понятные продуктовые задачи</p>
+      {/* Footer */}
+      <footer className="py-8 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-400">
+          <div className="font-bold text-lg">
+            <span className="text-[#0B2D6B]">Lex</span><span className="text-[#16A334]">.ON</span>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 bg-[#F3F5F7] rounded-xl flex items-center justify-center mb-4">
-                  <Icon size={20} className="text-[#0B2D6B]" />
-                </div>
-                <h3 className="font-semibold text-[#0B2D6B] mb-2">{title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="journey" className="bg-[#F3F5F7] py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#0B2D6B] mb-3">Путь клиента</h2>
-            <p className="text-gray-500">На выходе каждого шага: документ + статус + владелец + следующий риск</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-3">
-            {journey.map(({ num, stage, action }, i) => (
-              <div key={num} className="flex items-center gap-3">
-                <div className="bg-white border border-gray-200 rounded-xl px-5 py-3 text-center min-w-[110px]">
-                  <div className="text-xs text-gray-400 font-mono mb-1">{num}. {stage}</div>
-                  <div className="text-[#0B2D6B] font-semibold text-sm">{action}</div>
-                </div>
-                {i < journey.length - 1 && <ArrowRight size={16} className="text-[#16A334] shrink-0" />}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="packages" className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#0B2D6B] mb-3">Пакеты</h2>
-            <p className="text-gray-500">Setup fee + monthly subscription + success fee для крупных сделок</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packages.map(({ name, period, desc, price }) => (
-              <div key={name} className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-[#0B2D6B] transition-colors">
-                <h3 className="font-bold text-[#0B2D6B] mb-1">{name}</h3>
-                <div className="text-gray-400 text-xs mb-3">{period}</div>
-                <p className="text-gray-500 text-sm mb-4">{desc}</p>
-                <div className="text-[#16A334] font-bold">{price}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#0B2D6B] py-20">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Начните с Legal Scan</h2>
-          <p className="text-white/70 mb-8">Карта рисков и legal roadmap за 1–2 недели. 300–700 тыс. ₸</p>
-          <div className="flex gap-4 justify-center">
-            <Link to="/scan" className="bg-[#16A334] hover:bg-[#138a2c] text-white font-semibold px-7 py-3 rounded-lg transition-colors">
-              Пройти Legal Scan
-            </Link>
-            <Link to="/dashboard" className="border border-white/30 text-white hover:bg-white/10 font-semibold px-7 py-3 rounded-lg transition-colors">
-              Открыть платформу
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <footer className="border-t border-gray-100 py-8">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-xl font-bold"><span className="text-[#0B2D6B]">Lex</span><span className="text-[#16A334]">.ON</span></div>
-          <div className="text-gray-400 text-sm flex items-center gap-2">
-            <Phone size={14} /> Sarsembaev Kanat · AI Legal Counsel · PhD · 7 701 797 63 42
-          </div>
-          <div className="text-sm"><span className="text-[#16A334] font-medium">You Create.</span> <span className="text-[#0B2D6B] font-medium">We Protect.</span></div>
+          <div>Sarsembaev Kanat · AI Legal Counsel · PhD</div>
+          <a href="tel:+77017976342" className="hover:text-[#0B2D6B] transition-colors">+7 701 797 63 42</a>
         </div>
       </footer>
+
     </div>
   )
 }
