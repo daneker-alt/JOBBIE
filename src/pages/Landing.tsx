@@ -35,7 +35,7 @@ const packages = [
 function Logo({ className = '' }: { className?: string }) {
   return (
     <span className={`font-bold tracking-tightest ${className}`}>
-      <span className="text-brand-blue">Lex</span><span className="text-brand-green">.ON</span>
+      <span className="text-brand-blue">Kerege</span><span className="text-brand-green">.ON</span>
     </span>
   )
 }
@@ -71,7 +71,7 @@ export default function Landing() {
             ))}
           </nav>
           <div className="hidden md:flex items-center gap-2">
-            <Link to="/dashboard" className="text-sm text-muted hover:text-ink px-3 py-2 transition-colors">Войти</Link>
+            <Link to="/login" className="text-sm text-muted hover:text-ink px-3 py-2 transition-colors">Войти</Link>
             <Link to="/scan" className="text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-4 py-2 rounded-md transition-opacity">Начать</Link>
           </div>
           <button className="md:hidden text-ink" onClick={() => setMenuOpen(v => !v)} aria-label="Меню">
@@ -98,7 +98,7 @@ export default function Landing() {
             <span className="text-brand-green">Мы защищаем его</span> как систему.
           </h1>
           <p className="mt-6 text-lg text-muted max-w-xl leading-relaxed">
-            Lex.ON превращает юридические риски в управляемые задачи: владелец, статус, дедлайн, документ. От идеи и MVP до Astana Hub, IP, данных и инвестиций.
+            Kerege.ON превращает юридические риски в управляемые задачи: владелец, статус, дедлайн, документ. От идеи и MVP до Astana Hub, IP, данных и инвестиций.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3">
             <Link to="/scan" className="inline-flex items-center justify-center gap-2 text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-6 py-3 rounded-md transition-opacity">

@@ -1,6 +1,18 @@
+import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+
 interface HeaderProps { title: string; onHelp?: () => void }
 
 export default function Header({ title, onHelp }: HeaderProps) {
+  const { user, isAdmin, signOut } = useAuth()
+  const navigate = useNavigate()
+
+  async function logout() {
+    await signOut()
+    navigate('/login')
+  }
+
   return (
     <header className="h-14 bg-white border-b border-line flex items-center justify-between px-6 shrink-0">
       <div className="flex items-center gap-3">
@@ -15,9 +27,20 @@ export default function Header({ title, onHelp }: HeaderProps) {
         >
           Помощь
         </button>
-        <span className="bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-2.5 py-1 rounded-full">
-          Риск <span className="font-mono">68/100</span>
-        </span>
+        {user && (
+          <span className={`hidden sm:inline text-xs font-medium px-2.5 py-1 rounded-full border ${isAdmin ? 'bg-brand-blue/5 text-brand-blue border-brand-blue/20' : 'bg-brand-surface text-muted border-line'}`}>
+            {isAdmin ? 'Сотрудник' : 'Клиент'} · {user.email}
+          </span>
+        )}
+        {user && (
+          <button
+            onClick={logout}
+            title="Выйти"
+            className="text-muted hover:text-brand-blue border border-line hover:bg-brand-surface p-1.5 rounded-lg transition-colors"
+          >
+            <LogOut size={14} />
+          </button>
+        )}
       </div>
     </header>
   )

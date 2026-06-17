@@ -13,7 +13,7 @@ const socials = [
   },
   {
     label: 'Telegram',
-    href: 'https://t.me/lexon_kz',
+    href: 'https://t.me/kerege_kz',
     color: '#229ED9',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -23,7 +23,7 @@ const socials = [
   },
   {
     label: 'Instagram',
-    href: 'https://instagram.com/lexon.kz',
+    href: 'https://instagram.com/kerege.kz',
     gradient: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">

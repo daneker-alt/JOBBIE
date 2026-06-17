@@ -30,7 +30,7 @@ function getAnswer(msg: string): string {
 export default function Assistant() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Привет! Я помощник Lex.ON. Задайте вопрос про IP, данные, договоры, Astana Hub или инвестиции — отвечу сразу.' }
+    { role: 'assistant', text: 'Привет! Я помощник Kerege.ON. Задайте вопрос про IP, данные, договоры, Astana Hub или инвестиции — отвечу сразу.' }
   ])
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
@@ -78,7 +78,7 @@ export default function Assistant() {
         >
           {/* Header */}
           <div className="bg-[#0B2D6B] text-white flex items-center justify-between px-4 py-3 shrink-0">
-            <div className="font-semibold text-sm">Lex.ON Помощник</div>
+            <div className="font-semibold text-sm">Kerege.ON Помощник</div>
             <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white transition-colors">
               <X size={16} />
             </button>

@@ -17,7 +17,7 @@ export default function Sidebar() {
     <aside className="w-60 shrink-0 flex flex-col h-screen bg-[#0B2D6B]">
       <div className="px-5 py-6 border-b border-white/10">
         <div className="text-2xl font-bold leading-none">
-          <span className="text-white">Lex</span><span className="text-[#16A334]">.ON</span>
+          <span className="text-white">Kerege</span><span className="text-[#16A334]">.ON</span>
         </div>
         <div className="text-xs mt-1">
           <span className="text-[#16A334]">You Create.</span>

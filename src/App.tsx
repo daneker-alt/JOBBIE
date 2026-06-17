@@ -1,9 +1,12 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import SocialFloat from './components/SocialFloat'
 import Assistant from './components/Assistant'
 import Landing from './pages/Landing'
+import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import LegalScan from './pages/LegalScan'
 import IPRegistry from './pages/IPRegistry'
@@ -42,18 +45,29 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   )
 }
 
+function Protected({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute>
+      <AppLayout>{children}</AppLayout>
+    </ProtectedRoute>
+  )
+}
+
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
-      <Route path="/scan" element={<AppLayout><LegalScan /></AppLayout>} />
-      <Route path="/ip" element={<AppLayout><IPRegistry /></AppLayout>} />
-      <Route path="/data" element={<AppLayout><DataAI /></AppLayout>} />
-      <Route path="/hub" element={<AppLayout><AstanaHub /></AppLayout>} />
-      <Route path="/contracts" element={<AppLayout><ContractsHub /></AppLayout>} />
-      <Route path="/investor" element={<AppLayout><InvestorRoom /></AppLayout>} />
-      <Route path="/journey" element={<AppLayout><ClientJourney /></AppLayout>} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+        <Route path="/scan" element={<Protected><LegalScan /></Protected>} />
+        <Route path="/ip" element={<Protected><IPRegistry /></Protected>} />
+        <Route path="/data" element={<Protected><DataAI /></Protected>} />
+        <Route path="/hub" element={<Protected><AstanaHub /></Protected>} />
+        <Route path="/contracts" element={<Protected><ContractsHub /></Protected>} />
+        <Route path="/investor" element={<Protected><InvestorRoom /></Protected>} />
+        <Route path="/journey" element={<Protected><ClientJourney /></Protected>} />
+      </Routes>
+    </AuthProvider>
   )
 }
