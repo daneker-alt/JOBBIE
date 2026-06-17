@@ -33,11 +33,11 @@ const initialForm: FormData = {
 function RadioGroup({ label, name, value, onChange }: { label: string; name: keyof FormData; value: string; onChange: (k: keyof FormData, v: string) => void }) {
   return (
     <div className="mb-5">
-      <p className="text-slate-300 text-sm mb-2">{label}</p>
+      <p className="text-ink text-sm mb-2">{label}</p>
       <div className="flex gap-3">
         {['Да', 'Нет', 'Частично'].map(opt => (
           <button key={opt} type="button" onClick={() => onChange(name, opt)}
-            className={`px-4 py-2 rounded-lg text-sm border transition-colors ${value === opt ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
+            className={`px-4 py-2 rounded-lg text-sm border transition-colors ${value === opt ? 'bg-brand-blue text-white border-brand-blue' : 'border-line text-muted hover:bg-brand-surface'}`}>
             {opt}
           </button>
         ))}
@@ -89,19 +89,19 @@ export default function LegalScan() {
     return (
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-indigo-600/20 border border-indigo-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={28} className="text-indigo-400" />
+          <div className="w-16 h-16 bg-brand-surface border border-line rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle size={28} className="text-brand-green" />
           </div>
-          <h2 className="text-white text-2xl font-bold mb-2">Legal Scan завершён</h2>
-          <p className="text-slate-400">{form.companyName || 'Ваша компания'} · Стадия: {stageLabels[form.stage] || 'не указана'}</p>
+          <h2 className="text-brand-blue text-2xl font-semibold mb-2 tracking-tightest">Legal Scan завершён</h2>
+          <p className="text-muted">{form.companyName || 'Ваша компания'} · Стадия: {stageLabels[form.stage] || 'не указана'}</p>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-6 text-center">
-          <div className="text-slate-400 text-sm mb-1">Общий риск-скор</div>
-          <div className={`text-6xl font-bold mb-2 ${risk.overall >= 75 ? 'text-green-400' : risk.overall >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-            {risk.overall}<span className="text-2xl text-slate-500">/100</span>
+        <div className="bg-white border border-line rounded-2xl p-6 mb-6 text-center shadow-sm">
+          <div className="text-muted text-sm mb-1">Общий риск-скор</div>
+          <div className={`text-6xl font-mono font-semibold mb-2 ${risk.overall >= 75 ? 'text-green-700' : risk.overall >= 50 ? 'text-amber-700' : 'text-red-700'}`}>
+            {risk.overall}<span className="text-2xl text-muted">/100</span>
           </div>
-          <div className="text-slate-400 text-sm">
+          <div className="text-muted text-sm">
             {risk.overall >= 75 ? 'Низкий риск — хорошая правовая база' : risk.overall >= 50 ? 'Средний риск — требуется работа' : 'Высокий риск — необходима срочная работа'}
           </div>
         </div>
@@ -113,33 +113,33 @@ export default function LegalScan() {
             { label: 'Contracts', score: risk.sales, desc: risk.sales < 60 ? 'Нужны SaaS Terms, SLA и MSA' : 'Договорная база в норме' },
             { label: 'Investor Ready', score: risk.invest, desc: risk.invest < 60 ? 'Соберите cap table и data room' : 'Готовность к DD хорошая' },
           ].map(({ label, score, desc }) => {
-            const color = score >= 75 ? 'text-green-400' : score >= 50 ? 'text-yellow-400' : 'text-red-400'
-            const bg = score >= 75 ? 'bg-green-500/10 border-green-500/20' : score >= 50 ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-red-500/10 border-red-500/20'
+            const color = score >= 75 ? 'text-green-700' : score >= 50 ? 'text-amber-700' : 'text-red-700'
+            const fill = score >= 75 ? 'bg-brand-green' : score >= 50 ? 'bg-amber-500' : 'bg-red-500'
             return (
-              <div key={label} className={`border rounded-xl p-5 ${bg}`}>
+              <div key={label} className="bg-white border border-line rounded-xl p-5 shadow-sm hover:shadow-md transition">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-slate-300 font-semibold">{label}</span>
-                  <span className={`font-bold ${color}`}>{score}/100</span>
+                  <span className="text-ink font-semibold">{label}</span>
+                  <span className={`font-mono font-semibold ${color}`}>{score}/100</span>
                 </div>
-                <div className="w-full bg-slate-700 rounded-full h-1.5 mb-3">
-                  <div className={`h-1.5 rounded-full ${score >= 75 ? 'bg-green-500' : score >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${score}%` }} />
+                <div className="w-full bg-line rounded-full h-1.5 mb-3">
+                  <div className={`h-1.5 rounded-full ${fill}`} style={{ width: `${score}%` }} />
                 </div>
                 <div className="flex items-start gap-2">
-                  {score < 60 ? <AlertTriangle size={14} className="text-yellow-400 mt-0.5 shrink-0" /> : <CheckCircle size={14} className="text-green-400 mt-0.5 shrink-0" />}
-                  <p className="text-slate-400 text-xs">{desc}</p>
+                  {score < 60 ? <AlertTriangle size={14} className="text-amber-600 mt-0.5 shrink-0" /> : <CheckCircle size={14} className="text-green-600 mt-0.5 shrink-0" />}
+                  <p className="text-muted text-xs">{desc}</p>
                 </div>
               </div>
             )
           })}
         </div>
 
-        <div className="bg-indigo-600/10 border border-indigo-500/30 rounded-2xl p-6 text-center">
-          <p className="text-slate-300 mb-4">Получите полный legal roadmap и backlog задач в формате платформы</p>
+        <div className="bg-brand-surface border border-line rounded-2xl p-6 text-center">
+          <p className="text-ink mb-4">Получите полный legal roadmap и backlog задач в формате платформы</p>
           <button onClick={() => { setDone(false); setStep(1); setForm(initialForm) }}
-            className="text-indigo-400 hover:text-indigo-300 text-sm underline mr-6 transition-colors">
+            className="text-brand-blue hover:opacity-85 text-sm underline mr-6 transition-colors">
             Пройти заново
           </button>
-          <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+          <button className="bg-brand-blue hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
             Заказать полный Legal Scan
           </button>
         </div>
@@ -152,39 +152,39 @@ export default function LegalScan() {
       <div className="flex items-center gap-2 mb-8">
         {steps.map(s => (
           <div key={s.id} className="flex items-center gap-2 flex-1">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-colors ${s.id < step ? 'bg-indigo-600 text-white' : s.id === step ? 'bg-indigo-600/30 border border-indigo-500 text-indigo-400' : 'bg-slate-800 text-slate-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-mono font-semibold shrink-0 transition-colors ${s.id < step ? 'bg-brand-blue text-white' : s.id === step ? 'bg-brand-surface border border-brand-blue text-brand-blue' : 'bg-brand-surface text-muted'}`}>
               {s.id < step ? <CheckCircle size={14} /> : s.id}
             </div>
-            {s.id < steps.length && <div className={`flex-1 h-0.5 ${s.id < step ? 'bg-indigo-600' : 'bg-slate-800'}`} />}
+            {s.id < steps.length && <div className={`flex-1 h-0.5 ${s.id < step ? 'bg-brand-blue' : 'bg-line'}`} />}
           </div>
         ))}
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
-        <h2 className="text-white font-bold text-xl mb-1">{steps[step - 1].title}</h2>
-        <p className="text-slate-400 text-sm mb-6">{steps[step - 1].subtitle}</p>
+      <div className="bg-white border border-line rounded-2xl p-8 shadow-sm">
+        <h2 className="text-ink font-semibold text-xl mb-1 tracking-tightest">{steps[step - 1].title}</h2>
+        <p className="text-muted text-sm mb-6">{steps[step - 1].subtitle}</p>
 
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <label className="text-slate-300 text-sm mb-2 block">Название компании</label>
-              <input className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500"
+              <label className="text-ink text-sm mb-2 block">Название компании</label>
+              <input className="w-full bg-white border border-line rounded-lg px-4 py-2.5 text-ink text-sm focus:outline-none focus:border-brand-blue"
                 placeholder="AI Health Assistant Ltd" value={form.companyName} onChange={e => update('companyName', e.target.value)} />
             </div>
             <div>
-              <label className="text-slate-300 text-sm mb-2 block">Стадия</label>
+              <label className="text-ink text-sm mb-2 block">Стадия</label>
               <div className="grid grid-cols-3 gap-2">
                 {stages.map(s => (
                   <button key={s} type="button" onClick={() => update('stage', s)}
-                    className={`py-2 px-3 rounded-lg text-sm border transition-colors ${form.stage === s ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
+                    className={`py-2 px-3 rounded-lg text-sm border transition-colors ${form.stage === s ? 'bg-brand-blue text-white border-brand-blue' : 'border-line text-muted hover:bg-brand-surface'}`}>
                     {stageLabels[s]}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="text-slate-300 text-sm mb-2 block">Индустрия</label>
-              <select className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500"
+              <label className="text-ink text-sm mb-2 block">Индустрия</label>
+              <select className="w-full bg-white border border-line rounded-lg px-4 py-2.5 text-ink text-sm focus:outline-none focus:border-brand-blue"
                 value={form.industry} onChange={e => update('industry', e.target.value)}>
                 <option value="">Выберите...</option>
                 <option>HealthTech / MedTech</option>
@@ -231,19 +231,19 @@ export default function LegalScan() {
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-700">
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-line">
           <button onClick={() => setStep(s => Math.max(1, s - 1))} disabled={step === 1}
-            className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-slate-200 disabled:opacity-40 transition-colors">
+            className="flex items-center gap-2 px-4 py-2 text-muted hover:text-ink disabled:opacity-40 transition-colors">
             <ArrowLeft size={16} /> Назад
           </button>
           {step < steps.length ? (
             <button onClick={() => setStep(s => s + 1)}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+              className="flex items-center gap-2 bg-brand-blue hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
               Далее <ArrowRight size={16} />
             </button>
           ) : (
             <button onClick={() => setDone(true)}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+              className="flex items-center gap-2 bg-brand-green hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
               <CheckCircle size={16} /> Получить карту рисков
             </button>
           )}

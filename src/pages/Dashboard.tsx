@@ -32,9 +32,9 @@ const riskCategories = [
 ]
 
 function getDocStatus(status: string) {
-  if (status === 'ready') return 'text-green-400 bg-green-500/10 border-green-500/20'
-  if (status === 'pending') return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20'
-  return 'text-gray-500 bg-gray-100 border-gray-200'
+  if (status === 'ready') return 'text-green-700 bg-green-50 border-green-200'
+  if (status === 'pending') return 'text-amber-700 bg-amber-50 border-amber-200'
+  return 'text-muted bg-brand-surface border-line'
 }
 function getDocLabel(status: string) {
   if (status === 'ready') return 'Готов'
@@ -47,18 +47,20 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {riskCategories.map(({ label, score, icon: Icon }) => {
-          const color = score >= 75 ? 'text-green-400' : score >= 50 ? 'text-yellow-400' : 'text-red-400'
-          const bg = score >= 75 ? 'bg-green-500/10' : score >= 50 ? 'bg-yellow-500/10' : 'bg-red-500/10'
-          const border = score >= 75 ? 'border-green-500/20' : score >= 50 ? 'border-yellow-500/20' : 'border-red-500/20'
+          const color = score >= 75 ? 'text-green-700' : score >= 50 ? 'text-amber-700' : 'text-red-700'
+          const dot = score >= 75 ? 'bg-green-500' : score >= 50 ? 'bg-amber-500' : 'bg-red-500'
+          const fill = score >= 75 ? 'bg-brand-green' : score >= 50 ? 'bg-amber-500' : 'bg-red-500'
           return (
-            <div key={label} className={`${bg} border ${border} rounded-xl p-4`}>
+            <div key={label} className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-500 text-xs font-medium">{label}</span>
-                <Icon size={14} className="text-gray-400" />
+                <span className="text-muted text-xs font-medium flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${dot}`} /> {label}
+                </span>
+                <Icon size={14} className="text-muted" />
               </div>
-              <div className={`text-2xl font-bold ${color}`}>{score}</div>
-              <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
-                <div className={`h-1 rounded-full ${score >= 75 ? 'bg-green-500' : score >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${score}%` }} />
+              <div className={`text-2xl font-mono font-semibold ${color}`}>{score}</div>
+              <div className="w-full bg-line rounded-full h-1 mt-2">
+                <div className={`h-1 rounded-full ${fill}`} style={{ width: `${score}%` }} />
               </div>
             </div>
           )
@@ -68,22 +70,22 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-[#1F2937] font-semibold">Legal Backlog</h2>
-            <span className="text-gray-400 text-sm">{tasks.length} задачи</span>
+            <h2 className="text-ink font-semibold tracking-tightest">Legal Backlog</h2>
+            <span className="text-muted text-sm"><span className="font-mono">{tasks.length}</span> задачи</span>
           </div>
           {tasks.map((task, i) => <TaskCard key={i} {...task} />)}
         </div>
 
         <div>
-          <h2 className="text-[#1F2937] font-semibold mb-4">Compliance Calendar</h2>
+          <h2 className="text-ink font-semibold mb-4 tracking-tightest">Compliance Calendar</h2>
           <div className="space-y-3">
             {calendar.map(({ date, event, urgent }) => (
-              <div key={date} className={`bg-white border rounded-xl p-3 ${urgent ? 'border-red-500/30' : 'border-gray-200'}`}>
+              <div key={date} className={`bg-white border rounded-xl p-3 shadow-sm hover:shadow-md transition ${urgent ? 'border-red-200' : 'border-line'}`}>
                 <div className="flex items-start gap-2">
-                  {urgent ? <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" /> : <Clock size={14} className="text-gray-400 mt-0.5 shrink-0" />}
+                  {urgent ? <AlertTriangle size={14} className="text-red-600 mt-0.5 shrink-0" /> : <Clock size={14} className="text-muted mt-0.5 shrink-0" />}
                   <div>
-                    <div className="text-gray-500 text-xs mb-0.5">{date}</div>
-                    <div className="text-gray-700 text-sm">{event}</div>
+                    <div className="text-muted text-xs mb-0.5 font-mono">{date}</div>
+                    <div className="text-ink text-sm">{event}</div>
                   </div>
                 </div>
               </div>
@@ -94,17 +96,17 @@ export default function Dashboard() {
 
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[#1F2937] font-semibold">Document Map</h2>
-          <span className="text-gray-400 text-sm">{documents.filter(d => d.status === 'ready').length} из {documents.length} готовы</span>
+          <h2 className="text-ink font-semibold tracking-tightest">Document Map</h2>
+          <span className="text-muted text-sm"><span className="font-mono">{documents.filter(d => d.status === 'ready').length}</span> из <span className="font-mono">{documents.length}</span> готовы</span>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
           {documents.map(({ name, status, type }) => (
-            <div key={name} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+            <div key={name} className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <FileText size={16} className="text-gray-400" />
+                <FileText size={16} className="text-muted" />
                 <div>
-                  <div className="text-gray-700 text-sm font-medium">{name}</div>
-                  <div className="text-gray-400 text-xs">{type}</div>
+                  <div className="text-ink text-sm font-medium">{name}</div>
+                  <div className="text-muted text-xs">{type}</div>
                 </div>
               </div>
               <span className={`text-xs border px-2 py-0.5 rounded-full ${getDocStatus(status)}`}>{getDocLabel(status)}</span>

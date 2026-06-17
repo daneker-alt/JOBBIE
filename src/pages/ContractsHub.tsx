@@ -20,16 +20,16 @@ const activeContracts = [
 ]
 
 const typeColors: Record<string, string> = {
-  Sales: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-  Corporate: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-  IP: 'text-green-400 bg-green-500/10 border-green-500/20',
-  Finance: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
+  Sales: 'text-blue-700 bg-blue-50 border-blue-200',
+  Corporate: 'text-purple-700 bg-purple-50 border-purple-200',
+  IP: 'text-green-700 bg-green-50 border-green-200',
+  Finance: 'text-amber-700 bg-amber-50 border-amber-200',
 }
 
 function TemplateBadge({ status }: { status: string }) {
-  if (status === 'ready') return <span className="text-green-400 bg-green-500/10 border border-green-500/20 text-xs px-2 py-0.5 rounded-full flex items-center gap-1"><CheckCircle size={10} /> Готов</span>
-  if (status === 'review') return <span className="text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 text-xs px-2 py-0.5 rounded-full flex items-center gap-1"><Clock size={10} /> На проверке</span>
-  return <span className="text-gray-500 bg-gray-100 border border-gray-200 text-xs px-2 py-0.5 rounded-full">Черновик</span>
+  if (status === 'ready') return <span className="text-green-700 bg-green-50 border border-green-200 text-xs px-2 py-0.5 rounded-full flex items-center gap-1"><CheckCircle size={10} /> Готов</span>
+  if (status === 'review') return <span className="text-amber-700 bg-amber-50 border border-amber-200 text-xs px-2 py-0.5 rounded-full flex items-center gap-1"><Clock size={10} /> На проверке</span>
+  return <span className="text-muted bg-brand-surface border border-line text-xs px-2 py-0.5 rounded-full">Черновик</span>
 }
 
 export default function ContractsHub() {
@@ -40,41 +40,41 @@ export default function ContractsHub() {
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white border border-gray-200 rounded-xl p-4">
-              <div className="text-gray-500 text-xs mb-1">Шаблонов готово</div>
-              <div className="text-2xl font-bold text-[#0B2D6B]">{readyCount}/{templates.length}</div>
+            <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
+              <div className="text-muted text-xs mb-1">Шаблонов готово</div>
+              <div className="text-2xl font-mono font-semibold text-brand-blue">{readyCount}/{templates.length}</div>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-4">
-              <div className="text-gray-500 text-xs mb-1">Активных договоров</div>
-              <div className="text-2xl font-bold text-[#0B2D6B]">{activeContracts.filter(c => c.status === 'active').length}</div>
+            <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
+              <div className="text-muted text-xs mb-1">Активных договоров</div>
+              <div className="text-2xl font-mono font-semibold text-brand-blue">{activeContracts.filter(c => c.status === 'active').length}</div>
             </div>
-            <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4">
-              <div className="text-gray-500 text-xs mb-1">Требуют внимания</div>
-              <div className="text-2xl font-bold text-red-400">{activeContracts.filter(c => c.status === 'risk').length}</div>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+              <div className="text-muted text-xs mb-1">Требуют внимания</div>
+              <div className="text-2xl font-mono font-semibold text-red-700">{activeContracts.filter(c => c.status === 'risk').length}</div>
             </div>
           </div>
 
           {/* Templates */}
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-[#1F2937] font-semibold">Шаблоны договоров</h2>
+          <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-6 py-4 border-b border-line">
+              <h2 className="text-ink font-semibold tracking-tightest">Шаблоны договоров</h2>
             </div>
-            <div className="grid md:grid-cols-2 gap-px bg-gray-100">
+            <div className="grid md:grid-cols-2 gap-px bg-line">
               {templates.map(({ name, desc, type, status }) => (
-                <div key={name} className="bg-white p-5 hover:bg-gray-50 transition-colors">
+                <div key={name} className="bg-white p-5 hover:bg-brand-surface transition-colors">
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div className="flex items-start gap-3">
-                      <FileText size={16} className="text-gray-400 mt-0.5 shrink-0" />
+                      <FileText size={16} className="text-muted mt-0.5 shrink-0" />
                       <div>
-                        <div className="text-[#1F2937] text-sm font-medium">{name}</div>
-                        <div className="text-gray-400 text-xs mt-0.5">{desc}</div>
+                        <div className="text-ink text-sm font-medium">{name}</div>
+                        <div className="text-muted text-xs mt-0.5">{desc}</div>
                       </div>
                     </div>
                     <TemplateBadge status={status} />
                   </div>
                   <div className="flex items-center justify-between mt-3">
-                    <span className={`text-xs border px-2 py-0.5 rounded-full ${typeColors[type] || 'text-gray-500 bg-gray-100 border-gray-300'}`}>{type}</span>
-                    <button className="flex items-center gap-1.5 text-[#0B2D6B] hover:text-[#0B2D6B] text-xs transition-colors">
+                    <span className={`text-xs border px-2 py-0.5 rounded-full ${typeColors[type] || 'text-muted bg-brand-surface border-line'}`}>{type}</span>
+                    <button className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors">
                       <Download size={12} /> Скачать
                     </button>
                   </div>
@@ -84,30 +84,30 @@ export default function ContractsHub() {
           </div>
 
           {/* Active Contracts */}
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-[#1F2937] font-semibold">Активные договоры</h2>
+          <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-6 py-4 border-b border-line">
+              <h2 className="text-ink font-semibold tracking-tightest">Активные договоры</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200">
+                  <tr className="border-b border-line">
                     {['Клиент', 'Тип договора', 'Подписан', 'Истекает', 'Статус'].map(h => (
-                      <th key={h} className="text-left text-gray-400 font-medium px-5 py-3">{h}</th>
+                      <th key={h} className="text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted px-5 py-3">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {activeContracts.map(c => (
-                    <tr key={c.client} className="border-b border-gray-100 hover:bg-gray-100/30 transition-colors">
-                      <td className="px-5 py-3 text-gray-700 font-medium">{c.client}</td>
-                      <td className="px-5 py-3 text-gray-500">{c.type}</td>
-                      <td className="px-5 py-3 text-gray-500">{c.signed}</td>
-                      <td className="px-5 py-3 text-gray-500">{c.expiry}</td>
+                    <tr key={c.client} className="border-b border-line hover:bg-brand-surface transition-colors">
+                      <td className="px-5 py-3 text-ink font-medium">{c.client}</td>
+                      <td className="px-5 py-3 text-muted">{c.type}</td>
+                      <td className="px-5 py-3 text-muted font-mono text-xs">{c.signed}</td>
+                      <td className="px-5 py-3 text-muted font-mono text-xs">{c.expiry}</td>
                       <td className="px-5 py-3">
                         {c.status === 'active'
-                          ? <span className="text-green-400 text-xs flex items-center gap-1"><CheckCircle size={12} /> Активен</span>
-                          : <span className="text-red-400 text-xs flex items-center gap-1"><AlertTriangle size={12} /> Риск</span>}
+                          ? <span className="text-green-700 text-xs flex items-center gap-1"><CheckCircle size={12} /> Активен</span>
+                          : <span className="text-red-700 text-xs flex items-center gap-1"><AlertTriangle size={12} /> Риск</span>}
                       </td>
                     </tr>
                   ))}
