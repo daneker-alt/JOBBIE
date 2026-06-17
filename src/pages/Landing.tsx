@@ -1,174 +1,212 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { CheckCircle, ArrowRight, Phone } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
 import SocialFloat from '../components/SocialFloat'
 import Assistant from '../components/Assistant'
 
-const problems = [
-  'Инвестор задаёт вопросы — нечего показать',
-  'Подрядчик ушёл с кодом — права не оформлены',
-  'Клиент не платит — договора нет',
-  'Astana Hub отказал — не та структура выручки',
+const stats = [
+  { value: '10', unit: 'мин', label: 'Legal Scan от анкеты до карты рисков' },
+  { value: '2', unit: 'нед', label: 'Roadmap и базовые документы' },
+  { value: '4', unit: 'зоны', label: 'IP · Данные · Договоры · Инвестор' },
+  { value: '90', unit: '/10', label: 'Структура выручки для Astana Hub' },
 ]
 
-const results = [
-  { num: '10', label: 'минут', desc: 'Legal Scan — карта ваших рисков' },
-  { num: '2', label: 'недели', desc: 'Roadmap + базовые документы' },
-  { num: '1', label: 'кабинет', desc: 'Всё в одном месте: задачи, дедлайны, документы' },
+const capabilities = [
+  { name: 'Legal Scan', desc: 'Анкета превращается в карту рисков с приоритетами и legal roadmap по всем зонам стартапа.' },
+  { name: 'IP Registry', desc: 'Права на код, дизайн, модели и датасеты закреплены за компанией — отслеживаются по статусу владельца.' },
+  { name: 'Data & AI', desc: 'Privacy policy, согласия, локализация данных РК и AI-disclaimers в одном compliance-чеклисте.' },
+  { name: 'Astana Hub', desc: 'Проверка eligibility, контроль структуры выручки 90/10 и календарь отчётности резидента.' },
+  { name: 'Contracts', desc: 'MSA, SaaS Terms, SLA и пилотные соглашения — шаблоны, которые защищают оплату и продукт.' },
+  { name: 'Investor Room', desc: 'Cap table, SAFE/SHA, data room и ответы на due diligence — готовность к раунду в процентах.' },
 ]
 
-const steps = [
-  { n: '1', title: 'Scan', desc: 'Заполняете анкету — получаете карту рисков и план' },
-  { n: '2', title: 'Fix', desc: 'Юрист закрывает задачи: IP, данные, договоры, Hub' },
-  { n: '3', title: 'Grow', desc: 'Продаёте, привлекаете инвестиции, масштабируетесь' },
+const workflow = [
+  { phase: 'Scan', desc: 'Заполняете анкету — система собирает факты и показывает, где риски, что готово и что делать первым.' },
+  { phase: 'Fix', desc: 'Юрист закрывает задачи бэклога: оформляет IP, данные, договоры и структуру под Astana Hub.' },
+  { phase: 'Grow', desc: 'Продаёте по защищённым договорам, проходите DD и привлекаете инвестиции без правовых пробелов.' },
 ]
 
 const packages = [
-  { name: 'Legal Sprint', price: 'от 300 000 ₸', desc: '1–2 недели. Scan + roadmap + первичные документы. Стартовая точка.' },
-  { name: 'Monthly LegalOps', price: 'от 200 000 ₸/мес', desc: 'Постоянный кабинет, задачи, мониторинг. Юрист как часть команды.', highlight: true },
-  { name: 'Investor Ready', price: 'от 350 000 ₸', desc: 'Cap table, data room, SAFE/SHA. Готовность к DD за 3–4 недели.' },
+  { name: 'Legal Sprint', price: '300 000', unit: '₸', desc: 'Scan, roadmap и первичный пакет документов за 1–2 недели.', cta: 'Стартовая точка', featured: false },
+  { name: 'Monthly LegalOps', price: '200 000', unit: '₸/мес', desc: 'Постоянный кабинет, задачи, мониторинг и Q&A. Юрист как часть команды.', cta: 'Популярный', featured: true },
+  { name: 'Investor Ready', price: '350 000', unit: '₸', desc: 'Cap table, data room, SAFE/SHA и ответы на DD за 3–4 недели.', cta: 'Перед раундом', featured: false },
 ]
 
-export default function Landing() {
+function Logo({ className = '' }: { className?: string }) {
   return (
-    <div className="min-h-screen bg-white font-sans">
+    <span className={`font-bold tracking-tightest ${className}`}>
+      <span className="text-brand-blue">Lex</span><span className="text-brand-green">.ON</span>
+    </span>
+  )
+}
 
-      {/* Nav */}
-      <nav className="sticky top-0 bg-white border-b border-gray-100 z-10">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="text-xl font-bold">
-            <span className="text-[#0B2D6B]">Lex</span><span className="text-[#16A334]">.ON</span>
-          </div>
-          <a href="tel:+77017976342"
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#0B2D6B] transition-colors">
-            <Phone size={14} /> +7 701 797 63 42
-          </a>
-          <Link to="/scan"
-            className="bg-[#16A334] hover:bg-[#138a2c] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
-            Начать бесплатно
-          </Link>
-        </div>
-      </nav>
+export default function Landing() {
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
-      {/* Hero */}
-      <section className="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
-        <p className="text-[#16A334] font-semibold text-sm mb-4 tracking-wide uppercase">
-          Юридическое сопровождение для AI/IT стартапов Казахстана
-        </p>
-        <h1 className="text-5xl md:text-6xl font-bold text-[#0B2D6B] leading-tight mb-6">
-          Вы строите продукт.<br />
-          <span className="text-[#16A334]">Мы защищаем его.</span>
-        </h1>
-        <p className="text-gray-500 text-xl mb-10 max-w-xl mx-auto leading-relaxed">
-          IP, данные, договоры, Astana Hub и инвестиционная готовность — всё в одном кабинете.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/scan"
-            className="bg-[#16A334] hover:bg-[#138a2c] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors flex items-center justify-center gap-2">
-            Пройти Legal Scan <ArrowRight size={18} />
-          </Link>
-          <a href="tel:+77017976342"
-            className="border-2 border-[#0B2D6B] text-[#0B2D6B] hover:bg-[#0B2D6B] hover:text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors">
-            Позвонить
-          </a>
-        </div>
-      </section>
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-      {/* Pain */}
-      <section className="bg-[#F3F5F7] py-14">
-        <div className="max-w-5xl mx-auto px-6">
-          <p className="text-center text-gray-400 text-sm font-semibold uppercase tracking-wide mb-8">
-            Это уже случилось с другими стартапами
-          </p>
-          <div className="grid md:grid-cols-2 gap-3">
-            {problems.map(p => (
-              <div key={p} className="bg-white border border-gray-200 rounded-xl px-5 py-4 flex items-start gap-3">
-                <span className="text-red-500 text-lg shrink-0 mt-0.5">×</span>
-                <span className="text-gray-700 text-sm">{p}</span>
-              </div>
+  const navLinks = [
+    { href: '#capabilities', label: 'Возможности' },
+    { href: '#how', label: 'Как работает' },
+    { href: '#pricing', label: 'Пакеты' },
+  ]
+
+  return (
+    <div className="min-h-screen bg-canvas font-sans text-ink">
+
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-shadow duration-200 ${scrolled ? 'shadow-sm' : ''}`}
+        style={{ background: 'rgba(250,250,250,0.8)', backdropFilter: 'blur(12px)' }}
+      >
+        <div className="max-w-container mx-auto px-6 h-14 flex items-center justify-between border-b border-line">
+          <Logo className="text-lg" />
+          <nav className="hidden md:flex items-center gap-8">
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} className="text-sm text-muted hover:text-ink transition-colors">{l.label}</a>
             ))}
+          </nav>
+          <div className="hidden md:flex items-center gap-2">
+            <Link to="/dashboard" className="text-sm text-muted hover:text-ink px-3 py-2 transition-colors">Войти</Link>
+            <Link to="/scan" className="text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-4 py-2 rounded-md transition-opacity">Начать</Link>
           </div>
-          <p className="text-center text-[#0B2D6B] font-semibold mt-8">
-            С Lex.ON вы узнаёте о рисках до того, как они стали проблемой.
-          </p>
+          <button className="md:hidden text-ink" onClick={() => setMenuOpen(v => !v)} aria-label="Меню">
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
-      </section>
-
-      {/* Results */}
-      <section className="py-16">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            {results.map(({ num, label, desc }) => (
-              <div key={num}>
-                <div className="text-5xl font-bold text-[#0B2D6B] leading-none">{num}</div>
-                <div className="text-[#16A334] font-bold text-lg mb-2">{label}</div>
-                <div className="text-gray-500 text-sm">{desc}</div>
-              </div>
+        {menuOpen && (
+          <div className="md:hidden border-b border-line bg-canvas px-6 py-4 space-y-3">
+            {navLinks.map(l => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="block text-sm text-muted hover:text-ink">{l.label}</a>
             ))}
+            <Link to="/scan" className="block text-sm font-medium text-white bg-brand-blue px-4 py-2 rounded-md text-center">Начать</Link>
+          </div>
+        )}
+      </header>
+
+      <section className="max-w-container mx-auto px-6 pt-40 pb-20">
+        <div className="max-w-3xl animate-rise">
+          <p className="text-xs uppercase tracking-[0.14em] text-muted mb-6">
+            Юридическая операционная система · AI / IT · Казахстан
+          </p>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tightest leading-[1.05] text-ink max-w-3xl">
+            Вы строите продукт.<br />
+            <span className="text-brand-green">Мы защищаем его</span> как систему.
+          </h1>
+          <p className="mt-6 text-lg text-muted max-w-xl leading-relaxed">
+            Lex.ON превращает юридические риски в управляемые задачи: владелец, статус, дедлайн, документ. От идеи и MVP до Astana Hub, IP, данных и инвестиций.
+          </p>
+          <div className="mt-9 flex flex-col sm:flex-row gap-3">
+            <Link to="/scan" className="inline-flex items-center justify-center gap-2 text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-6 py-3 rounded-md transition-opacity">
+              Пройти Legal Scan <ArrowRight size={16} />
+            </Link>
+            <a href="#capabilities" className="inline-flex items-center justify-center gap-2 text-sm font-medium text-ink border border-line hover:bg-brand-surface px-6 py-3 rounded-md transition-colors">
+              Что внутри
+            </a>
           </div>
         </div>
-      </section>
 
-      {/* How it works */}
-      <section className="bg-[#0B2D6B] py-16">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-white text-3xl font-bold text-center mb-12">Как это работает</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {steps.map(({ n, title, desc }) => (
-              <div key={n} className="text-center">
-                <div className="w-12 h-12 rounded-full bg-[#16A334] text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
-                  {n}
+        <div className="mt-20 pt-10 border-t border-line">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8">
+            {stats.map(s => (
+              <div key={s.label}>
+                <div className="font-mono text-4xl font-semibold text-brand-blue leading-none">
+                  {s.value}<span className="text-xl text-muted">{s.unit}</span>
                 </div>
-                <div className="text-white font-bold text-lg mb-2">{title}</div>
-                <div className="text-white/60 text-sm leading-relaxed">{desc}</div>
+                <div className="mt-3 text-sm text-muted leading-snug max-w-[200px]">{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Packages */}
-      <section className="py-16">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-[#0B2D6B] text-center mb-3">Пакеты</h2>
-          <p className="text-gray-400 text-center mb-10">Выберите что нужно сейчас. Можно комбинировать.</p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {packages.map(({ name, price, desc, highlight }) => (
-              <div key={name} className={`rounded-2xl p-6 border-2 transition-all ${highlight ? 'border-[#0B2D6B] bg-[#0B2D6B] text-white' : 'border-gray-200 bg-white hover:border-[#0B2D6B]'}`}>
-                {highlight && <div className="text-[#16A334] text-xs font-bold uppercase tracking-wide mb-2">Популярный</div>}
-                <h3 className={`font-bold text-lg mb-1 ${highlight ? 'text-white' : 'text-[#0B2D6B]'}`}>{name}</h3>
-                <div className={`text-2xl font-bold mb-3 ${highlight ? 'text-[#16A334]' : 'text-[#16A334]'}`}>{price}</div>
-                <p className={`text-sm leading-relaxed ${highlight ? 'text-white/70' : 'text-gray-500'}`}>{desc}</p>
+      <section id="capabilities" className="max-w-container mx-auto px-6 py-24 border-t border-line">
+        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">Возможности</p>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink max-w-2xl">
+          Один кабинет вместо писем, файлов и устных договорённостей
+        </h2>
+        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-line border border-line rounded-xl overflow-hidden">
+          {capabilities.map(c => (
+            <div key={c.name} className="group bg-white p-6 transition-colors hover:bg-brand-surface">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-base font-semibold text-ink">{c.name}</h3>
+                <ArrowUpRight size={16} className="text-line group-hover:text-brand-blue transition-colors" />
               </div>
-            ))}
-          </div>
+              <p className="text-sm text-muted leading-relaxed">{c.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="bg-[#F3F5F7] py-16">
-        <div className="max-w-xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-[#0B2D6B] mb-4">Начните с Legal Scan</h2>
-          <p className="text-gray-500 mb-8">10 минут — и вы знаете где риски и что делать дальше.</p>
-          <Link to="/scan"
-            className="inline-flex items-center gap-2 bg-[#16A334] hover:bg-[#138a2c] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors mb-6">
-            Пройти Legal Scan <ArrowRight size={18} />
+      <section id="how" className="max-w-container mx-auto px-6 py-24 border-t border-line">
+        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">Процесс</p>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink max-w-2xl">
+          Три состояния, в которых живёт ваш стартап
+        </h2>
+        <div className="mt-12 grid md:grid-cols-3 gap-8">
+          {workflow.map((w, i) => (
+            <div key={w.phase} className="pt-6 border-t-2 border-brand-blue">
+              <div className="flex items-baseline gap-3 mb-3">
+                <span className="font-mono text-sm text-muted">0{i + 1}</span>
+                <h3 className="text-xl font-semibold text-ink">{w.phase}</h3>
+              </div>
+              <p className="text-sm text-muted leading-relaxed">{w.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="pricing" className="max-w-container mx-auto px-6 py-24 border-t border-line">
+        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">Пакеты</p>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink max-w-2xl">
+          Выберите, что нужно сейчас. Можно комбинировать
+        </h2>
+        <div className="mt-12 grid md:grid-cols-3 gap-6">
+          {packages.map(p => (
+            <div key={p.name} className={`rounded-xl border p-7 transition-all hover:-translate-y-0.5 hover:shadow-md ${p.featured ? 'border-brand-blue bg-brand-blue text-white' : 'border-line bg-white'}`}>
+              <div className={`text-xs uppercase tracking-[0.1em] mb-4 ${p.featured ? 'text-brand-green' : 'text-muted'}`}>{p.cta}</div>
+              <h3 className={`text-lg font-semibold mb-2 ${p.featured ? 'text-white' : 'text-ink'}`}>{p.name}</h3>
+              <div className="mb-4 flex items-baseline gap-1">
+                <span className={`text-xs ${p.featured ? 'text-white/60' : 'text-muted'}`}>от</span>
+                <span className={`font-mono text-3xl font-semibold ${p.featured ? 'text-white' : 'text-brand-blue'}`}>{p.price}</span>
+                <span className={`text-sm ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.unit}</span>
+              </div>
+              <p className={`text-sm leading-relaxed mb-6 ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.desc}</p>
+              <Link to="/scan" className={`inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-85 ${p.featured ? 'text-brand-green' : 'text-brand-blue'}`}>
+                Начать <ArrowRight size={14} />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-container mx-auto px-6 py-24 border-t border-line">
+        <div className="max-w-2xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink">Начните с Legal Scan</h2>
+          <p className="mt-4 text-lg text-muted max-w-lg leading-relaxed">
+            Десять минут — и вы знаете, где находятся риски и какой документ нужен следующим. Без предоплаты, с фиксированной ценой этапов.
+          </p>
+          <Link to="/scan" className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-6 py-3 rounded-md transition-opacity">
+            Пройти Legal Scan <ArrowRight size={16} />
           </Link>
-          <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
-            <CheckCircle size={14} className="text-[#16A334]" /> Без предоплаты
-            <CheckCircle size={14} className="text-[#16A334]" /> Результат за 2 недели
-            <CheckCircle size={14} className="text-[#16A334]" /> Фиксированная цена
-          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 border-t border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-gray-400">
-          <div className="font-bold text-lg">
-            <span className="text-[#0B2D6B]">Lex</span><span className="text-[#16A334]">.ON</span>
+      <footer className="border-t border-line">
+        <div className="max-w-container mx-auto px-6 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <Logo className="text-base" />
+            <p className="mt-2 text-sm">
+              <span className="text-brand-green font-medium">You Create.</span>{' '}
+              <span className="text-brand-blue font-medium">We Protect.</span>
+            </p>
           </div>
-          <div>Sarsembaev Kanat · AI Legal Counsel · PhD</div>
-          <a href="tel:+77017976342" className="hover:text-[#0B2D6B] transition-colors">+7 701 797 63 42</a>
+          <div className="text-sm text-muted">Sarsembaev Kanat · AI Legal Counsel · PhD</div>
+          <a href="tel:+77017976342" className="font-mono text-sm text-ink hover:text-brand-blue transition-colors">+7 701 797 63 42</a>
         </div>
       </footer>
 
