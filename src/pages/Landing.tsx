@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
 import SocialFloat from '../components/SocialFloat'
 import Assistant from '../components/Assistant'
 import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 const featuredPackageIndex = 1
 
@@ -46,7 +47,8 @@ export default function Landing() {
               <a key={l.href} href={l.href} className="text-sm text-muted hover:text-ink transition-colors">{l.label}</a>
             ))}
           </nav>
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
             <Link to="/login" className="text-sm text-muted hover:text-ink px-3 py-2 transition-colors">{t.landing.login}</Link>
             <Link to="/scan" className="text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-4 py-2 rounded-md transition-opacity">{t.landing.start}</Link>
           </div>
@@ -59,6 +61,7 @@ export default function Landing() {
             {navLinks.map(l => (
               <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="block text-sm text-muted hover:text-ink">{l.label}</a>
             ))}
+            <LanguageSwitcher />
             <Link to="/scan" className="block text-sm font-medium text-white bg-brand-blue px-4 py-2 rounded-md text-center">{t.landing.start}</Link>
           </div>
         )}

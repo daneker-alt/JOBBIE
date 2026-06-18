@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 
 function Logo() {
   return <span className="text-2xl font-bold tracking-tightest"><span className="text-brand-blue">Kerege</span><span className="text-brand-green">.ON</span></span>
@@ -40,6 +41,9 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-brand-surface flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
+        <div className="flex justify-center mb-4">
+          <LanguageSwitcher />
+        </div>
         <div className="text-center mb-8">
           <Logo />
           <p className="text-muted text-sm mt-2">
