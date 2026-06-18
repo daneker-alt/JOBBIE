@@ -24,7 +24,7 @@ const en: Dict = {
     navCapabilities: 'Capabilities', navHow: 'How it works', navPricing: 'Packages',
     login: 'Sign in', start: 'Get started', menuAria: 'Menu',
     eyebrow: 'Legal operating system · AI / IT · Kazakhstan',
-    heroTitle1: 'You build the product.', heroTitle2: 'We protect it as a system.',
+    heroTitle1: 'You Create.', heroTitle2: 'We Protect.',
     heroSubtitle: 'Kerege.ON turns legal risk into manageable tasks: owner, status, deadline, document. From idea and MVP to Astana Hub, IP, data and investment.',
     ctaScan: 'Take the Legal Scan', ctaWhatsInside: "What's inside",
     stats: [

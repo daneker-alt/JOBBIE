@@ -24,7 +24,7 @@ const ru: Dict = {
     navCapabilities: 'Возможности', navHow: 'Как работает', navPricing: 'Пакеты',
     login: 'Войти', start: 'Начать', menuAria: 'Меню',
     eyebrow: 'Юридическая операционная система · AI / IT · Казахстан',
-    heroTitle1: 'Вы строите продукт.', heroTitle2: 'Мы защищаем его как систему.',
+    heroTitle1: 'Вы создаёте.', heroTitle2: 'Мы защищаем.',
     heroSubtitle: 'Kerege.ON превращает юридические риски в управляемые задачи: владелец, статус, дедлайн, документ. От идеи и MVP до Astana Hub, IP, данных и инвестиций.',
     ctaScan: 'Пройти Legal Scan', ctaWhatsInside: 'Что внутри',
     stats: [

@@ -73,8 +73,8 @@ export default function Landing() {
             {t.landing.eyebrow}
           </p>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tightest leading-[1.05] text-ink max-w-3xl">
-            {t.landing.heroTitle1}<br />
-            <span className="text-brand-green">{t.landing.heroTitle2}</span>
+            <span className="text-brand-green">{t.landing.heroTitle1}</span><br />
+            {t.landing.heroTitle2}
           </h1>
           <p className="mt-6 text-lg text-muted max-w-xl leading-relaxed">
             {t.landing.heroSubtitle}

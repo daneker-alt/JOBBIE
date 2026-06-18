@@ -24,7 +24,7 @@ const kk: Dict = {
     navCapabilities: 'Мүмкіндіктер', navHow: 'Қалай жұмыс істейді', navPricing: 'Пакеттер',
     login: 'Кіру', start: 'Бастау', menuAria: 'Мәзір',
     eyebrow: 'Заңдық операциялық жүйе · AI / IT · Қазақстан',
-    heroTitle1: 'Сіз өнім құрасыз.', heroTitle2: 'Біз оны жүйе ретінде қорғаймыз.',
+    heroTitle1: 'Сіз жасайсыз.', heroTitle2: 'Біз қорғаймыз.',
     heroSubtitle: 'Kerege.ON заңдық тәуекелдерді басқарылатын тапсырмаларға айналдырады: иесі, статусы, мерзімі, құжаты. Идея мен MVP-ден Astana Hub, IP, деректер және инвестицияларға дейін.',
     ctaScan: 'Legal Scan жасау', ctaWhatsInside: 'Ішінде не бар',
     stats: [
