@@ -183,8 +183,8 @@ export default function Landing() {
           <div>
             <Logo className="text-base" />
             <p className="mt-2 text-sm">
-              <span className="text-brand-green font-medium">You Create.</span>{' '}
-              <span className="text-brand-blue font-medium">We Protect.</span>
+              <span className="text-brand-green font-medium">{t.common.taglineCreate}</span>{' '}
+              <span className="text-brand-blue font-medium">{t.common.taglineProtect}</span>
             </p>
           </div>
           <div className="text-sm text-muted">{t.landing.footerCredit}</div>

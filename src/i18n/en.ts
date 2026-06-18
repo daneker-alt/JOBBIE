@@ -7,6 +7,7 @@ const en: Dict = {
     employeeMode: 'Employee mode — editing', clientView: 'Client view — read-only',
     employee: 'Employee', client: 'Client', yes: 'Yes', no: 'No', partial: 'Partial',
     open: 'Open', download: 'Download',
+    taglineCreate: 'You Create.', taglineProtect: 'We Protect.',
   },
   nav: {
     dashboard: 'Dashboard', scan: 'Legal Scan', ip: 'IP Registry', data: 'Data & AI',

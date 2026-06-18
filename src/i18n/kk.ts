@@ -7,6 +7,7 @@ const kk: Dict = {
     employeeMode: 'Қызметкер режимі — өңдеу', clientView: 'Клиент көрінісі — тек қарау',
     employee: 'Қызметкер', client: 'Клиент', yes: 'Иә', no: 'Жоқ', partial: 'Жартылай',
     open: 'Ашу', download: 'Жүктеу',
+    taglineCreate: 'Сіз жасайсыз.', taglineProtect: 'Біз қорғаймыз.',
   },
   nav: {
     dashboard: 'Дашборд', scan: 'Legal Scan', ip: 'IP Тізілімі', data: 'Data & AI',

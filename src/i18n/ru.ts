@@ -7,6 +7,7 @@ const ru: Dict = {
     employeeMode: 'Режим сотрудника — редактирование', clientView: 'Клиентский вид — только просмотр',
     employee: 'Сотрудник', client: 'Клиент', yes: 'Да', no: 'Нет', partial: 'Частично',
     open: 'Открыть', download: 'Скачать',
+    taglineCreate: 'Вы создаёте.', taglineProtect: 'Мы защищаем.',
   },
   nav: {
     dashboard: 'Дашборд', scan: 'Legal Scan', ip: 'IP Реестр', data: 'Data & AI',

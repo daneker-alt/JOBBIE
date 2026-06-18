@@ -18,6 +18,8 @@ export interface Dict {
     partial: string
     open: string
     download: string
+    taglineCreate: string
+    taglineProtect: string
   }
   nav: {
     dashboard: string

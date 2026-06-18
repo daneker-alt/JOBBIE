@@ -22,8 +22,8 @@ export default function Sidebar() {
           <span className="text-white">Kerege</span><span className="text-[#16A334]">.ON</span>
         </div>
         <div className="text-xs mt-1">
-          <span className="text-[#16A334]">You Create.</span>
-          <span className="text-white/60"> We Protect.</span>
+          <span className="text-[#16A334]">{t.common.taglineCreate}</span>
+          <span className="text-white/60"> {t.common.taglineProtect}</span>
         </div>
       </div>
       <nav className="flex-1 py-3 overflow-y-auto">

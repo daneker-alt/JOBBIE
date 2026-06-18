@@ -47,7 +47,8 @@ export default function Login() {
         <div className="text-center mb-8">
           <Logo />
           <p className="text-muted text-sm mt-2">
-            {t.login.subtitle}
+            <span className="text-brand-green font-medium">{t.common.taglineCreate}</span>{' '}
+            <span className="text-brand-blue font-medium">{t.common.taglineProtect}</span>
           </p>
         </div>
 
