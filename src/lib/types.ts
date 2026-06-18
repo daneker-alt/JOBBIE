@@ -8,6 +8,7 @@ export interface AuthUser {
 
 export type DocStatus = 'ready' | 'pending' | 'draft'
 export type TaskStatus = 'urgent' | 'in-progress' | 'ready' | 'pending'
+export type IPStatus = 'assigned' | 'pending' | 'risk'
 
 export interface RiskCategory {
   label: string
@@ -34,9 +35,84 @@ export interface CalendarItem {
   urgent: boolean
 }
 
+export interface ChecklistItem {
+  title: string
+  done: boolean
+  note?: string
+}
+
+export interface IPAsset {
+  id: number
+  name: string
+  type: string
+  owner: string
+  status: IPStatus
+  contractors: string
+  notes: string
+  riskScore: number
+}
+
+export interface Dataset {
+  name: string
+  size: string
+  sensitivity: 'high' | 'medium' | 'low'
+  consent: string
+  location: string
+  status: 'risk' | 'ok'
+}
+
+export interface RevenueMonth {
+  month: string
+  ict: number
+  other: number
+}
+
+export interface ContractTemplate {
+  name: string
+  desc: string
+  type: string
+  status: 'ready' | 'review' | 'draft'
+}
+
+export interface ActiveContract {
+  client: string
+  type: string
+  signed: string
+  expiry: string
+  status: 'active' | 'risk'
+}
+
+export interface DDCategory {
+  name: string
+  items: ChecklistItem[]
+}
+
+export interface InvestorDoc {
+  name: string
+  status: 'signed' | 'ready' | 'draft'
+  date: string
+}
+
+export interface JourneyStep {
+  num: number
+  status: 'done' | 'in-progress' | 'pending'
+}
+
 export interface WorkspaceData {
   risks: RiskCategory[]
   documents: WorkspaceDoc[]
   tasks: WorkspaceTask[]
   calendar: CalendarItem[]
+  ipAssets: IPAsset[]
+  privacyItems: ChecklistItem[]
+  datasets: Dataset[]
+  aiDisclaimers: ChecklistItem[]
+  hubEligibility: ChecklistItem[]
+  hubRequiredDocs: ChecklistItem[]
+  hubRevenue: RevenueMonth[]
+  contractTemplates: ContractTemplate[]
+  activeContracts: ActiveContract[]
+  ddCategories: DDCategory[]
+  investorDocs: InvestorDoc[]
+  journeySteps: JourneyStep[]
 }

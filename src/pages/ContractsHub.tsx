@@ -1,23 +1,7 @@
 import { FileText, Download, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
-
-const templates = [
-  { name: 'MSA (Master Service Agreement)', desc: 'Базовый договор на оказание услуг для B2B клиентов', type: 'Sales', status: 'ready' },
-  { name: 'SaaS Terms of Service', desc: 'Условия использования SaaS-продукта', type: 'Sales', status: 'ready' },
-  { name: 'SLA (Service Level Agreement)', desc: 'Соглашение об уровне сервиса с метриками uptime', type: 'Sales', status: 'ready' },
-  { name: 'POC / Pilot Agreement', desc: 'Договор на пилотный проект или PoC с клиентом', type: 'Sales', status: 'review' },
-  { name: 'NDA (Non-Disclosure Agreement)', desc: 'Соглашение о неразглашении конфиденциальной информации', type: 'Corporate', status: 'ready' },
-  { name: 'IP Assignment Agreement', desc: 'Передача прав на интеллектуальную собственность', type: 'IP', status: 'ready' },
-  { name: 'Contractor Agreement', desc: 'Договор с внешним разработчиком или подрядчиком', type: 'IP', status: 'draft' },
-  { name: 'Invoice Template (KZ)', desc: 'Счёт-фактура по требованиям НК РК', type: 'Finance', status: 'ready' },
-]
-
-const activeContracts = [
-  { client: 'MedLab KZ', type: 'Pilot Agreement', signed: '1 апр 2025', expiry: '1 июл 2025', status: 'active' },
-  { client: 'TechCorp Almaty', type: 'SaaS Terms + SLA', signed: '15 мар 2025', expiry: '15 мар 2026', status: 'active' },
-  { client: 'HealthGov Ministry', type: 'MSA + POC', signed: '10 янв 2025', expiry: '10 янв 2026', status: 'active' },
-  { client: 'AI Research Lab', type: 'NDA', signed: '5 мая 2025', expiry: '5 мая 2026', status: 'active' },
-  { client: 'Dev Agency KZ', type: 'Contractor Agreement', signed: '—', expiry: '—', status: 'risk' },
-]
+import SaveBar from '../components/SaveBar'
+import { useWorkspace } from '../lib/useWorkspace'
+import type { ContractTemplate } from '../lib/types'
 
 const typeColors: Record<string, string> = {
   Sales: 'text-blue-700 bg-blue-50 border-blue-200',
@@ -26,6 +10,8 @@ const typeColors: Record<string, string> = {
   Finance: 'text-amber-700 bg-amber-50 border-amber-200',
 }
 
+const templateStatusCycle: ContractTemplate['status'][] = ['draft', 'review', 'ready']
+
 function TemplateBadge({ status }: { status: string }) {
   if (status === 'ready') return <span className="text-green-700 bg-green-50 border border-green-200 text-xs px-2 py-0.5 rounded-full flex items-center gap-1"><CheckCircle size={10} /> Готов</span>
   if (status === 'review') return <span className="text-amber-700 bg-amber-50 border border-amber-200 text-xs px-2 py-0.5 rounded-full flex items-center gap-1"><Clock size={10} /> На проверке</span>
@@ -33,89 +19,115 @@ function TemplateBadge({ status }: { status: string }) {
 }
 
 export default function ContractsHub() {
+  const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
+
+  if (loading) return <div className="text-muted text-sm">Загрузка данных…</div>
+
+  const { contractTemplates: templates, activeContracts } = data
   const readyCount = templates.filter(t => t.status === 'ready').length
 
   return (
     <div className="space-y-6">
+      <SaveBar isAdmin={isAdmin} dirty={dirty} saving={saving} onSave={save} />
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
-              <div className="text-muted text-xs mb-1">Шаблонов готово</div>
-              <div className="text-2xl font-mono font-semibold text-brand-blue">{readyCount}/{templates.length}</div>
-            </div>
-            <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
-              <div className="text-muted text-xs mb-1">Активных договоров</div>
-              <div className="text-2xl font-mono font-semibold text-brand-blue">{activeContracts.filter(c => c.status === 'active').length}</div>
-            </div>
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
-              <div className="text-muted text-xs mb-1">Требуют внимания</div>
-              <div className="text-2xl font-mono font-semibold text-red-700">{activeContracts.filter(c => c.status === 'risk').length}</div>
-            </div>
-          </div>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
+          <div className="text-muted text-xs mb-1">Шаблонов готово</div>
+          <div className="text-2xl font-mono font-semibold text-brand-blue">{readyCount}/{templates.length}</div>
+        </div>
+        <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
+          <div className="text-muted text-xs mb-1">Активных договоров</div>
+          <div className="text-2xl font-mono font-semibold text-brand-blue">{activeContracts.filter(c => c.status === 'active').length}</div>
+        </div>
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+          <div className="text-muted text-xs mb-1">Требуют внимания</div>
+          <div className="text-2xl font-mono font-semibold text-red-700">{activeContracts.filter(c => c.status === 'risk').length}</div>
+        </div>
+      </div>
 
-          {/* Templates */}
-          <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
-            <div className="px-6 py-4 border-b border-line">
-              <h2 className="text-ink font-semibold tracking-tightest">Шаблоны договоров</h2>
-            </div>
-            <div className="grid md:grid-cols-2 gap-px bg-line">
-              {templates.map(({ name, desc, type, status }) => (
-                <div key={name} className="bg-white p-5 hover:bg-brand-surface transition-colors">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div className="flex items-start gap-3">
-                      <FileText size={16} className="text-muted mt-0.5 shrink-0" />
-                      <div>
-                        <div className="text-ink text-sm font-medium">{name}</div>
-                        <div className="text-muted text-xs mt-0.5">{desc}</div>
-                      </div>
-                    </div>
-                    <TemplateBadge status={status} />
-                  </div>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className={`text-xs border px-2 py-0.5 rounded-full ${typeColors[type] || 'text-muted bg-brand-surface border-line'}`}>{type}</span>
-                    <button className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors">
-                      <Download size={12} /> Скачать
-                    </button>
+      {/* Templates */}
+      <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
+        <div className="px-6 py-4 border-b border-line">
+          <h2 className="text-ink font-semibold tracking-tightest">Шаблоны договоров</h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-px bg-line">
+          {templates.map(({ name, desc, type, status }, idx) => (
+            <div key={name} className="bg-white p-5 hover:bg-brand-surface transition-colors">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex items-start gap-3">
+                  <FileText size={16} className="text-muted mt-0.5 shrink-0" />
+                  <div>
+                    <div className="text-ink text-sm font-medium">{name}</div>
+                    <div className="text-muted text-xs mt-0.5">{desc}</div>
                   </div>
                 </div>
-              ))}
+                {isAdmin ? (
+                  <button
+                    onClick={() => update(d => {
+                      const cur = d.contractTemplates[idx].status
+                      d.contractTemplates[idx].status = templateStatusCycle[(templateStatusCycle.indexOf(cur) + 1) % templateStatusCycle.length]
+                    })}
+                    className="hover:opacity-80 transition"
+                  >
+                    <TemplateBadge status={status} />
+                  </button>
+                ) : <TemplateBadge status={status} />}
+              </div>
+              <div className="flex items-center justify-between mt-3">
+                <span className={`text-xs border px-2 py-0.5 rounded-full ${typeColors[type] || 'text-muted bg-brand-surface border-line'}`}>{type}</span>
+                <button className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors">
+                  <Download size={12} /> Скачать
+                </button>
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
 
-          {/* Active Contracts */}
-          <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
-            <div className="px-6 py-4 border-b border-line">
-              <h2 className="text-ink font-semibold tracking-tightest">Активные договоры</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-line">
-                    {['Клиент', 'Тип договора', 'Подписан', 'Истекает', 'Статус'].map(h => (
-                      <th key={h} className="text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted px-5 py-3">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {activeContracts.map(c => (
-                    <tr key={c.client} className="border-b border-line hover:bg-brand-surface transition-colors">
-                      <td className="px-5 py-3 text-ink font-medium">{c.client}</td>
-                      <td className="px-5 py-3 text-muted">{c.type}</td>
-                      <td className="px-5 py-3 text-muted font-mono text-xs">{c.signed}</td>
-                      <td className="px-5 py-3 text-muted font-mono text-xs">{c.expiry}</td>
-                      <td className="px-5 py-3">
+      {/* Active Contracts */}
+      <div className="bg-white border border-line rounded-2xl overflow-hidden shadow-sm">
+        <div className="px-6 py-4 border-b border-line">
+          <h2 className="text-ink font-semibold tracking-tightest">Активные договоры</h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-line">
+                {['Клиент', 'Тип договора', 'Подписан', 'Истекает', 'Статус'].map(h => (
+                  <th key={h} className="text-left text-xs font-semibold uppercase tracking-[0.05em] text-muted px-5 py-3">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {activeContracts.map((c, idx) => (
+                <tr key={c.client} className="border-b border-line hover:bg-brand-surface transition-colors">
+                  <td className="px-5 py-3 text-ink font-medium">{c.client}</td>
+                  <td className="px-5 py-3 text-muted">{c.type}</td>
+                  <td className="px-5 py-3 text-muted font-mono text-xs">{c.signed}</td>
+                  <td className="px-5 py-3 text-muted font-mono text-xs">{c.expiry}</td>
+                  <td className="px-5 py-3">
+                    {isAdmin ? (
+                      <button
+                        onClick={() => update(d => { d.activeContracts[idx].status = d.activeContracts[idx].status === 'active' ? 'risk' : 'active' })}
+                        className="hover:opacity-80 transition"
+                      >
                         {c.status === 'active'
                           ? <span className="text-green-700 text-xs flex items-center gap-1"><CheckCircle size={12} /> Активен</span>
                           : <span className="text-red-700 text-xs flex items-center gap-1"><AlertTriangle size={12} /> Риск</span>}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
+                      </button>
+                    ) : (
+                      c.status === 'active'
+                        ? <span className="text-green-700 text-xs flex items-center gap-1"><CheckCircle size={12} /> Активен</span>
+                        : <span className="text-red-700 text-xs flex items-center gap-1"><AlertTriangle size={12} /> Риск</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }

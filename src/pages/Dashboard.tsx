@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
-import { AlertTriangle, Clock, FileText, Save, Eye, Lock } from 'lucide-react'
+import { AlertTriangle, Clock, FileText } from 'lucide-react'
 import TaskCard from '../components/TaskCard'
-import { useAuth } from '../context/AuthContext'
-import { loadWorkspace, saveWorkspace, defaultWorkspace } from '../lib/store'
-import type { WorkspaceData, DocStatus } from '../lib/types'
+import SaveBar from '../components/SaveBar'
+import { useWorkspace } from '../lib/useWorkspace'
+import type { DocStatus } from '../lib/types'
 
 const docStatusCycle: DocStatus[] = ['draft', 'pending', 'ready']
 
@@ -19,54 +18,13 @@ function getDocLabel(status: string) {
 }
 
 export default function Dashboard() {
-  const { user, isAdmin } = useAuth()
-  const [data, setData] = useState<WorkspaceData>(defaultWorkspace)
-  const [loading, setLoading] = useState(true)
-  const [dirty, setDirty] = useState(false)
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    if (!user) return
-    loadWorkspace(user.id)
-      .then(setData)
-      .catch(() => setData(defaultWorkspace))
-      .finally(() => setLoading(false))
-  }, [user])
-
-  function update(mut: (d: WorkspaceData) => void) {
-    setData(prev => {
-      const next = structuredClone(prev)
-      mut(next)
-      return next
-    })
-    setDirty(true)
-  }
-
-  async function save() {
-    if (!user) return
-    setSaving(true)
-    try {
-      await saveWorkspace(user.id, data)
-      setDirty(false)
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
 
   if (loading) return <div className="text-muted text-sm">Загрузка данных…</div>
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-full border ${isAdmin ? 'bg-brand-blue/5 border-brand-blue/20 text-brand-blue' : 'bg-brand-surface border-line text-muted'}`}>
-          {isAdmin ? <><Lock size={12} /> Режим сотрудника — редактирование</> : <><Eye size={12} /> Клиентский вид — только просмотр</>}
-        </div>
-        {isAdmin && dirty && (
-          <button onClick={save} disabled={saving} className="flex items-center gap-1.5 bg-brand-green text-white text-sm rounded-lg px-4 py-2 hover:opacity-90 transition disabled:opacity-60">
-            <Save size={14} /> {saving ? 'Сохранение…' : 'Сохранить'}
-          </button>
-        )}
-      </div>
+      <SaveBar isAdmin={isAdmin} dirty={dirty} saving={saving} onSave={save} />
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {data.risks.map(({ label, score }, idx) => {

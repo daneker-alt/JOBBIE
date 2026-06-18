@@ -1,7 +1,10 @@
 import { CheckCircle, Circle, ArrowRight, FileText, Shield, Building2, TrendingUp, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import SaveBar from '../components/SaveBar'
+import { useWorkspace } from '../lib/useWorkspace'
+import type { JourneyStep } from '../lib/types'
 
-const steps = [
+const stepMeta = [
   {
     num: 1,
     stage: 'Idea',
@@ -9,7 +12,6 @@ const steps = [
     desc: 'Анкета, карта рисков, legal roadmap. Понимаем что есть и что нужно.',
     icon: Search,
     path: '/scan',
-    status: 'done',
     docs: ['Legal Scan анкета', 'Risk Map', 'Legal Roadmap', 'Backlog задач'],
   },
   {
@@ -19,7 +21,6 @@ const steps = [
     desc: 'IP assignment для основателей и подрядчиков. Privacy policy и consent.',
     icon: Shield,
     path: '/ip',
-    status: 'in-progress',
     docs: ['IP Assignment (founders)', 'IP Assignment (contractors)', 'Privacy Policy', 'Data Consent Form'],
   },
   {
@@ -29,7 +30,6 @@ const steps = [
     desc: 'Договор на пилот. SLA с метриками. Защита оплаты и результата.',
     icon: FileText,
     path: '/contracts',
-    status: 'pending',
     docs: ['POC Agreement', 'SLA Template', 'Acceptance Criteria', 'Invoice Template'],
   },
   {
@@ -39,7 +39,6 @@ const steps = [
     desc: 'Eligibility check для Astana Hub. Структура выручки 90% ИКТ.',
     icon: Building2,
     path: '/hub',
-    status: 'pending',
     docs: ['Eligibility Assessment', '90/10 Revenue Structure', 'Hub Application', 'Compliance Calendar'],
   },
   {
@@ -49,7 +48,6 @@ const steps = [
     desc: 'MSA, SaaS Terms, SLA для масштабирования. Защита продукта и оплаты.',
     icon: FileText,
     path: '/contracts',
-    status: 'pending',
     docs: ['Master Service Agreement', 'SaaS Terms of Service', 'SLA', 'NDA Package'],
   },
   {
@@ -59,7 +57,6 @@ const steps = [
     desc: 'Cap table, SAFE/SHA, data room и DD checklist для инвестора.',
     icon: TrendingUp,
     path: '/investor',
-    status: 'pending',
     docs: ['Cap Table', 'SAFE / SHA', 'Data Room Package', 'DD Answers'],
   },
 ]
@@ -70,13 +67,25 @@ const statusConfig = {
   pending: { label: 'Ожидает', cls: 'text-muted bg-brand-surface border-line' },
 }
 
+const statusCycle: JourneyStep['status'][] = ['pending', 'in-progress', 'done']
+
 export default function ClientJourney() {
+  const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
+
+  if (loading) return <div className="text-muted text-sm">Загрузка данных…</div>
+
+  const steps = stepMeta.map(meta => ({
+    ...meta,
+    status: data.journeySteps.find(s => s.num === meta.num)?.status || 'pending',
+  }))
   const doneCount = steps.filter(s => s.status === 'done').length
   const inProgressCount = steps.filter(s => s.status === 'in-progress').length
 
   return (
-    <div>
-      <div className="flex items-center gap-6 mb-8 p-4 bg-white border border-line rounded-xl shadow-sm">
+    <div className="space-y-6">
+      <SaveBar isAdmin={isAdmin} dirty={dirty} saving={saving} onSave={save} />
+
+      <div className="flex items-center gap-6 p-4 bg-white border border-line rounded-xl shadow-sm">
         <div className="text-center">
           <div className="text-2xl font-mono font-semibold text-green-700">{doneCount}</div>
           <div className="text-muted text-xs">Завершено</div>
@@ -108,17 +117,24 @@ export default function ClientJourney() {
           return (
             <div key={step.num} className="flex gap-6">
               <div className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                  step.status === 'done' ? 'border-brand-green bg-green-50' :
-                  step.status === 'in-progress' ? 'border-amber-400 bg-amber-50' :
-                  'border-line bg-brand-surface'
-                }`}>
+                <button
+                  disabled={!isAdmin}
+                  onClick={() => update(d => {
+                    const entry = d.journeySteps.find(s => s.num === step.num)
+                    if (entry) entry.status = statusCycle[(statusCycle.indexOf(entry.status) + 1) % statusCycle.length]
+                  })}
+                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 ${isAdmin ? 'hover:opacity-80 transition' : ''} ${
+                    step.status === 'done' ? 'border-brand-green bg-green-50' :
+                    step.status === 'in-progress' ? 'border-amber-400 bg-amber-50' :
+                    'border-line bg-brand-surface'
+                  }`}
+                >
                   {step.status === 'done'
                     ? <CheckCircle size={18} className="text-green-600" />
                     : step.status === 'in-progress'
                     ? <div className="w-3 h-3 rounded-full bg-amber-500 animate-pulse" />
                     : <Circle size={18} className="text-muted" />}
-                </div>
+                </button>
                 {!isLast && <div className="w-0.5 h-full bg-line mt-2" />}
               </div>
 
