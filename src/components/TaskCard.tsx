@@ -1,4 +1,5 @@
 import { Clock, AlertTriangle, CheckCircle, Circle } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 interface TaskCardProps {
   title: string
@@ -9,11 +10,12 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ title, description, status, deadline, assignees }: TaskCardProps) {
+  const { t } = useLanguage()
   const conf = {
-    urgent: { icon: AlertTriangle, color: 'text-red-700', bg: 'bg-red-50 border-red-200', label: 'Срочно' },
-    'in-progress': { icon: Clock, color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200', label: 'В работе' },
-    ready: { icon: CheckCircle, color: 'text-green-700', bg: 'bg-green-50 border-green-200', label: 'Готово' },
-    pending: { icon: Circle, color: 'text-muted', bg: 'bg-white border-line', label: 'Ожидает' },
+    urgent: { icon: AlertTriangle, color: 'text-red-700', bg: 'bg-red-50 border-red-200', label: t.taskStatus.urgent },
+    'in-progress': { icon: Clock, color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200', label: t.taskStatus['in-progress'] },
+    ready: { icon: CheckCircle, color: 'text-green-700', bg: 'bg-green-50 border-green-200', label: t.taskStatus.ready },
+    pending: { icon: Circle, color: 'text-muted', bg: 'bg-white border-line', label: t.taskStatus.pending },
   }[status]
 
   const Icon = conf.icon

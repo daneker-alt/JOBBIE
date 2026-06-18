@@ -1,18 +1,8 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react'
-
-const steps = [
-  { id: 1, title: 'Компания', subtitle: 'Основная информация' },
-  { id: 2, title: 'IP', subtitle: 'Интеллектуальная собственность' },
-  { id: 3, title: 'Данные', subtitle: 'Персональные данные и AI' },
-  { id: 4, title: 'Договоры', subtitle: 'Продажи и сервисы' },
-  { id: 5, title: 'Инвестиции', subtitle: 'Готовность к DD' },
-]
+import { useLanguage } from '../context/LanguageContext'
 
 const stages = ['idea', 'mvp', 'pilot', 'hub', 'sales', 'invest']
-const stageLabels: Record<string, string> = {
-  idea: 'Идея', mvp: 'MVP', pilot: 'Пилот', hub: 'Astana Hub', sales: 'Продажи', invest: 'Инвестиции',
-}
 
 type FormData = {
   companyName: string; stage: string; industry: string
@@ -30,15 +20,17 @@ const initialForm: FormData = {
   capTable: '', dataRoomReady: '', safeExists: '',
 }
 
-function RadioGroup({ label, name, value, onChange }: { label: string; name: keyof FormData; value: string; onChange: (k: keyof FormData, v: string) => void }) {
+const RADIO_VALUES = ['Да', 'Нет', 'Частично']
+
+function RadioGroup({ label, name, value, onChange, optionLabels }: { label: string; name: keyof FormData; value: string; onChange: (k: keyof FormData, v: string) => void; optionLabels: string[] }) {
   return (
     <div className="mb-5">
       <p className="text-ink text-sm mb-2">{label}</p>
       <div className="flex gap-3">
-        {['Да', 'Нет', 'Частично'].map(opt => (
+        {RADIO_VALUES.map((opt, i) => (
           <button key={opt} type="button" onClick={() => onChange(name, opt)}
             className={`px-4 py-2 rounded-lg text-sm border transition-colors ${value === opt ? 'bg-brand-blue text-white border-brand-blue' : 'border-line text-muted hover:bg-brand-surface'}`}>
-            {opt}
+            {optionLabels[i]}
           </button>
         ))}
       </div>
@@ -79,6 +71,10 @@ function calcRisk(form: FormData) {
 }
 
 export default function LegalScan() {
+  const { t } = useLanguage()
+  const steps = t.legalScan.steps.map((s, i) => ({ id: i + 1, title: s.title, subtitle: s.subtitle }))
+  const stageLabels = t.legalScan.stageLabels
+  const optionLabels = [t.common.yes, t.common.no, t.common.partial]
   const [step, setStep] = useState(1)
   const [form, setForm] = useState<FormData>(initialForm)
   const [done, setDone] = useState(false)
@@ -92,26 +88,26 @@ export default function LegalScan() {
           <div className="w-16 h-16 bg-brand-surface border border-line rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle size={28} className="text-brand-green" />
           </div>
-          <h2 className="text-brand-blue text-2xl font-semibold mb-2 tracking-tightest">Legal Scan завершён</h2>
-          <p className="text-muted">{form.companyName || 'Ваша компания'} · Стадия: {stageLabels[form.stage] || 'не указана'}</p>
+          <h2 className="text-brand-blue text-2xl font-semibold mb-2 tracking-tightest">{t.legalScan.resultTitle}</h2>
+          <p className="text-muted">{form.companyName || t.legalScan.companyFallback} · {t.legalScan.stageLabel}: {stageLabels[form.stage] || t.legalScan.stageUnknown}</p>
         </div>
 
         <div className="bg-white border border-line rounded-2xl p-6 mb-6 text-center shadow-sm">
-          <div className="text-muted text-sm mb-1">Общий риск-скор</div>
+          <div className="text-muted text-sm mb-1">{t.legalScan.overallScore}</div>
           <div className={`text-6xl font-mono font-semibold mb-2 ${risk.overall >= 75 ? 'text-green-700' : risk.overall >= 50 ? 'text-amber-700' : 'text-red-700'}`}>
             {risk.overall}<span className="text-2xl text-muted">/100</span>
           </div>
           <div className="text-muted text-sm">
-            {risk.overall >= 75 ? 'Низкий риск — хорошая правовая база' : risk.overall >= 50 ? 'Средний риск — требуется работа' : 'Высокий риск — необходима срочная работа'}
+            {risk.overall >= 75 ? t.legalScan.riskLow : risk.overall >= 50 ? t.legalScan.riskMed : t.legalScan.riskHigh}
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           {[
-            { label: 'IP', score: risk.ip, desc: risk.ip < 60 ? 'Требуется IP assignment для всех участников' : 'IP структура в порядке' },
-            { label: 'Data & Privacy', score: risk.data, desc: risk.data < 60 ? 'Обновите consent и privacy policy' : 'Privacy compliance на уровне' },
-            { label: 'Contracts', score: risk.sales, desc: risk.sales < 60 ? 'Нужны SaaS Terms, SLA и MSA' : 'Договорная база в норме' },
-            { label: 'Investor Ready', score: risk.invest, desc: risk.invest < 60 ? 'Соберите cap table и data room' : 'Готовность к DD хорошая' },
+            { label: t.legalScan.categories[0].label, score: risk.ip, desc: risk.ip < 60 ? t.legalScan.categories[0].lowNote : t.legalScan.categories[0].okNote },
+            { label: t.legalScan.categories[1].label, score: risk.data, desc: risk.data < 60 ? t.legalScan.categories[1].lowNote : t.legalScan.categories[1].okNote },
+            { label: t.legalScan.categories[2].label, score: risk.sales, desc: risk.sales < 60 ? t.legalScan.categories[2].lowNote : t.legalScan.categories[2].okNote },
+            { label: t.legalScan.categories[3].label, score: risk.invest, desc: risk.invest < 60 ? t.legalScan.categories[3].lowNote : t.legalScan.categories[3].okNote },
           ].map(({ label, score, desc }) => {
             const color = score >= 75 ? 'text-green-700' : score >= 50 ? 'text-amber-700' : 'text-red-700'
             const fill = score >= 75 ? 'bg-brand-green' : score >= 50 ? 'bg-amber-500' : 'bg-red-500'
@@ -134,13 +130,13 @@ export default function LegalScan() {
         </div>
 
         <div className="bg-brand-surface border border-line rounded-2xl p-6 text-center">
-          <p className="text-ink mb-4">Получите полный legal roadmap и backlog задач в формате платформы</p>
+          <p className="text-ink mb-4">{t.legalScan.ctaText}</p>
           <button onClick={() => { setDone(false); setStep(1); setForm(initialForm) }}
             className="text-brand-blue hover:opacity-85 text-sm underline mr-6 transition-colors">
-            Пройти заново
+            {t.legalScan.retake}
           </button>
           <button className="bg-brand-blue hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
-            Заказать полный Legal Scan
+            {t.legalScan.orderFull}
           </button>
         </div>
       </div>
@@ -167,12 +163,12 @@ export default function LegalScan() {
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <label className="text-ink text-sm mb-2 block">Название компании</label>
+              <label className="text-ink text-sm mb-2 block">{t.legalScan.companyName}</label>
               <input className="w-full bg-white border border-line rounded-lg px-4 py-2.5 text-ink text-sm focus:outline-none focus:border-brand-blue"
-                placeholder="AI Health Assistant Ltd" value={form.companyName} onChange={e => update('companyName', e.target.value)} />
+                placeholder={t.legalScan.companyPlaceholder} value={form.companyName} onChange={e => update('companyName', e.target.value)} />
             </div>
             <div>
-              <label className="text-ink text-sm mb-2 block">Стадия</label>
+              <label className="text-ink text-sm mb-2 block">{t.legalScan.stage}</label>
               <div className="grid grid-cols-3 gap-2">
                 {stages.map(s => (
                   <button key={s} type="button" onClick={() => update('stage', s)}
@@ -183,17 +179,11 @@ export default function LegalScan() {
               </div>
             </div>
             <div>
-              <label className="text-ink text-sm mb-2 block">Индустрия</label>
+              <label className="text-ink text-sm mb-2 block">{t.legalScan.industry}</label>
               <select className="w-full bg-white border border-line rounded-lg px-4 py-2.5 text-ink text-sm focus:outline-none focus:border-brand-blue"
                 value={form.industry} onChange={e => update('industry', e.target.value)}>
-                <option value="">Выберите...</option>
-                <option>HealthTech / MedTech</option>
-                <option>FinTech</option>
-                <option>EdTech</option>
-                <option>AgriTech</option>
-                <option>B2B SaaS</option>
-                <option>AI / ML Platform</option>
-                <option>Другое</option>
+                <option value="">{t.legalScan.selectPlaceholder}</option>
+                {t.legalScan.industries.map(ind => <option key={ind}>{ind}</option>)}
               </select>
             </div>
           </div>
@@ -201,50 +191,50 @@ export default function LegalScan() {
 
         {step === 2 && (
           <div>
-            <RadioGroup label="Все основатели подписали IP assignment?" name="ipFounders" value={form.ipFounders} onChange={update} />
-            <RadioGroup label="Все подрядчики передали права на результаты работ?" name="ipContractors" value={form.ipContractors} onChange={update} />
-            <RadioGroup label="Используете open source с ограничительными лицензиями?" name="openSource" value={form.openSource} onChange={update} />
+            <RadioGroup label={t.legalScan.questions.ipFounders} name="ipFounders" value={form.ipFounders} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.ipContractors} name="ipContractors" value={form.ipContractors} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.openSource} name="openSource" value={form.openSource} onChange={update} optionLabels={optionLabels} />
           </div>
         )}
 
         {step === 3 && (
           <div>
-            <RadioGroup label="Обрабатываете персональные данные пользователей?" name="personalData" value={form.personalData} onChange={update} />
-            <RadioGroup label="Есть чувствительные данные (health, biometrics, fintech)?" name="sensitiveData" value={form.sensitiveData} onChange={update} />
-            <RadioGroup label="Есть действующий consent и privacy policy?" name="dataConsent" value={form.dataConsent} onChange={update} />
+            <RadioGroup label={t.legalScan.questions.personalData} name="personalData" value={form.personalData} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.sensitiveData} name="sensitiveData" value={form.sensitiveData} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.dataConsent} name="dataConsent" value={form.dataConsent} onChange={update} optionLabels={optionLabels} />
           </div>
         )}
 
         {step === 4 && (
           <div>
-            <RadioGroup label="Есть актуальные SaaS Terms / Terms of Service?" name="saasTerms" value={form.saasTerms} onChange={update} />
-            <RadioGroup label="Есть подписанные SLA с клиентами?" name="slaExists" value={form.slaExists} onChange={update} />
-            <RadioGroup label="Есть подписанные MSA с ключевыми клиентами?" name="msaSigned" value={form.msaSigned} onChange={update} />
+            <RadioGroup label={t.legalScan.questions.saasTerms} name="saasTerms" value={form.saasTerms} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.slaExists} name="slaExists" value={form.slaExists} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.msaSigned} name="msaSigned" value={form.msaSigned} onChange={update} optionLabels={optionLabels} />
           </div>
         )}
 
         {step === 5 && (
           <div>
-            <RadioGroup label="Cap table чистый и оформлен документально?" name="capTable" value={form.capTable} onChange={update} />
-            <RadioGroup label="Есть собранный data room для инвестора?" name="dataRoomReady" value={form.dataRoomReady} onChange={update} />
-            <RadioGroup label="Есть SAFE или SHA?" name="safeExists" value={form.safeExists} onChange={update} />
+            <RadioGroup label={t.legalScan.questions.capTable} name="capTable" value={form.capTable} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.dataRoomReady} name="dataRoomReady" value={form.dataRoomReady} onChange={update} optionLabels={optionLabels} />
+            <RadioGroup label={t.legalScan.questions.safeExists} name="safeExists" value={form.safeExists} onChange={update} optionLabels={optionLabels} />
           </div>
         )}
 
         <div className="flex items-center justify-between mt-8 pt-6 border-t border-line">
           <button onClick={() => setStep(s => Math.max(1, s - 1))} disabled={step === 1}
             className="flex items-center gap-2 px-4 py-2 text-muted hover:text-ink disabled:opacity-40 transition-colors">
-            <ArrowLeft size={16} /> Назад
+            <ArrowLeft size={16} /> {t.legalScan.back}
           </button>
           {step < steps.length ? (
             <button onClick={() => setStep(s => s + 1)}
               className="flex items-center gap-2 bg-brand-blue hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
-              Далее <ArrowRight size={16} />
+              {t.legalScan.next} <ArrowRight size={16} />
             </button>
           ) : (
             <button onClick={() => setDone(true)}
               className="flex items-center gap-2 bg-brand-green hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
-              <CheckCircle size={16} /> Получить карту рисков
+              <CheckCircle size={16} /> {t.legalScan.getMap}
             </button>
           )}
         </div>

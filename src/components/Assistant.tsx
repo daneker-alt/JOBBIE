@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, X, Send } from 'lucide-react'
+import { useLanguage } from '../context/LanguageContext'
 
 const faq = [
   { keywords: ['ip', 'права', 'код', 'assignment'], answer: 'IP Assignment оформляется между компанией и каждым основателем/подрядчиком. Это защищает права на код, дизайн и модели. Раздел IP Реестр поможет отследить статус.' },
@@ -10,27 +11,26 @@ const faq = [
   { keywords: ['scan', 'скан', 'начать', 'старт', 'риск'], answer: 'Начните с Legal Scan — 10-минутная анкета даст карту рисков по 4 зонам: IP, Data, Contracts, Investor Ready.' },
   { keywords: ['цена', 'стоимость', 'сколько', 'тариф', 'пакет'], answer: 'Legal Sprint (scan + roadmap): от 300 000 ₸. Monthly LegalOps: от 200 000 ₸/мес. Investor Ready: от 350 000 ₸. Позвоните для точного расчёта: +7 701 797 63 42' },
 ]
-const defaultAnswer = 'Я помогаю разобраться в правовых вопросах для IT/AI стартапов. Спросите про IP, данные, Astana Hub, договоры или инвестиционную готовность. Или позвоните напрямую: +7 701 797 63 42'
-
 interface Message {
   role: 'assistant' | 'user'
   text: string
 }
 
-function getAnswer(msg: string): string {
+function getAnswer(msg: string, fallback: string): string {
   const lower = msg.toLowerCase()
   for (const item of faq) {
     if (item.keywords.some(k => lower.includes(k))) {
       return item.answer
     }
   }
-  return defaultAnswer
+  return fallback
 }
 
 export default function Assistant() {
+  const { t } = useLanguage()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: 'Привет! Я помощник Kerege.ON. Задайте вопрос про IP, данные, договоры, Astana Hub или инвестиции — отвечу сразу.' }
+    { role: 'assistant', text: t.assistant.greeting }
   ])
   const [input, setInput] = useState('')
   const [thinking, setThinking] = useState(false)
@@ -47,7 +47,7 @@ export default function Assistant() {
     setMessages(prev => [...prev, { role: 'user', text }])
     setThinking(true)
     setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'assistant', text: getAnswer(text) }])
+      setMessages(prev => [...prev, { role: 'assistant', text: getAnswer(text, t.assistant.fallback) }])
       setThinking(false)
     }, 500)
   }
@@ -67,7 +67,7 @@ export default function Assistant() {
         className="fixed bottom-6 left-6 z-50 flex items-center gap-2 bg-[#0B2D6B] hover:bg-[#0a2660] text-white font-semibold text-sm px-4 py-3 rounded-full shadow-lg transition-all"
       >
         <MessageCircle size={18} />
-        Помощник
+        {t.assistant.title}
       </button>
 
       {/* Chat panel */}
@@ -78,7 +78,7 @@ export default function Assistant() {
         >
           {/* Header */}
           <div className="bg-[#0B2D6B] text-white flex items-center justify-between px-4 py-3 shrink-0">
-            <div className="font-semibold text-sm">Kerege.ON Помощник</div>
+            <div className="font-semibold text-sm">{t.assistant.title}</div>
             <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white transition-colors">
               <X size={16} />
             </button>
@@ -116,7 +116,7 @@ export default function Assistant() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder="Напишите вопрос..."
+              placeholder={t.assistant.placeholder}
               className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-[#0B2D6B] text-[#1F2937]"
             />
             <button

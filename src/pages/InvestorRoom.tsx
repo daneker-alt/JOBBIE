@@ -2,6 +2,8 @@ import { TrendingUp, FileText, Users } from 'lucide-react'
 import SaveBar from '../components/SaveBar'
 import Checklist from '../components/Checklist'
 import { useWorkspace } from '../lib/useWorkspace'
+import { useLanguage } from '../context/LanguageContext'
+import type { Dict } from '../i18n/types'
 
 const capTable = [
   { name: 'Алибек Джаксыбеков', role: 'CEO / Co-founder', equity: 45, type: 'Common' },
@@ -12,16 +14,17 @@ const capTable = [
 
 const statusCycle = ['draft', 'ready', 'signed'] as const
 
-function DocStatus({ status }: { status: string }) {
-  if (status === 'signed') return <span className="text-green-700 text-xs border border-green-200 bg-green-50 px-2 py-0.5 rounded-full">Подписан</span>
-  if (status === 'ready') return <span className="text-blue-700 text-xs border border-blue-200 bg-blue-50 px-2 py-0.5 rounded-full">Готов</span>
-  return <span className="text-muted text-xs border border-line bg-brand-surface px-2 py-0.5 rounded-full">Черновик</span>
+function DocStatus({ status, t }: { status: string; t: Dict }) {
+  if (status === 'signed') return <span className="text-green-700 text-xs border border-green-200 bg-green-50 px-2 py-0.5 rounded-full">{t.investorRoom.docStatus.signed}</span>
+  if (status === 'ready') return <span className="text-blue-700 text-xs border border-blue-200 bg-blue-50 px-2 py-0.5 rounded-full">{t.investorRoom.docStatus.ready}</span>
+  return <span className="text-muted text-xs border border-line bg-brand-surface px-2 py-0.5 rounded-full">{t.investorRoom.docStatus.draft}</span>
 }
 
 export default function InvestorRoom() {
   const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
+  const { t } = useLanguage()
 
-  if (loading) return <div className="text-muted text-sm">Загрузка данных…</div>
+  if (loading) return <div className="text-muted text-sm">{t.common.loading}</div>
 
   const { ddCategories, investorDocs: documents } = data
   const totalItems = ddCategories.reduce((s, c) => s + c.items.length, 0)
@@ -35,7 +38,7 @@ export default function InvestorRoom() {
       {/* Score */}
       <div className="grid grid-cols-3 gap-4">
         <div className={`border rounded-xl p-4 shadow-sm hover:shadow-md transition ${readinessScore >= 75 ? 'bg-green-50 border-green-200' : readinessScore >= 50 ? 'bg-amber-50 border-amber-200' : 'bg-red-50 border-red-200'}`}>
-          <div className="text-muted text-xs mb-1">Готовность к DD</div>
+          <div className="text-muted text-xs mb-1">{t.investorRoom.ddReadiness}</div>
           <div className={`text-3xl font-mono font-semibold ${readinessScore >= 75 ? 'text-green-700' : readinessScore >= 50 ? 'text-amber-700' : 'text-red-700'}`}>
             {readinessScore}%
           </div>
@@ -44,14 +47,14 @@ export default function InvestorRoom() {
           </div>
         </div>
         <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
-          <div className="text-muted text-xs mb-1">DD Checklist</div>
+          <div className="text-muted text-xs mb-1">{t.investorRoom.ddChecklist}</div>
           <div className="text-2xl font-mono font-semibold text-brand-blue">{doneItems}/{totalItems}</div>
-          <div className="text-muted text-xs mt-1">пунктов выполнено</div>
+          <div className="text-muted text-xs mt-1">{t.investorRoom.itemsDone}</div>
         </div>
         <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
-          <div className="text-muted text-xs mb-1">Документов</div>
+          <div className="text-muted text-xs mb-1">{t.investorRoom.docsCount}</div>
           <div className="text-2xl font-mono font-semibold text-brand-blue">{documents.filter(d => d.status !== 'draft').length}/{documents.length}</div>
-          <div className="text-muted text-xs mt-1">готово / всего</div>
+          <div className="text-muted text-xs mt-1">{t.investorRoom.readyTotal}</div>
         </div>
       </div>
 
@@ -59,7 +62,7 @@ export default function InvestorRoom() {
         {/* Cap Table */}
         <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
           <h2 className="text-ink font-semibold mb-4 flex items-center gap-2 tracking-tightest">
-            <Users size={16} className="text-brand-blue" /> Cap Table
+            <Users size={16} className="text-brand-blue" /> {t.investorRoom.capTableTitle}
           </h2>
           <div className="space-y-3">
             {capTable.map(({ name, role, equity, type }) => (
@@ -81,7 +84,7 @@ export default function InvestorRoom() {
             ))}
           </div>
           <div className="border-t border-line mt-4 pt-3 flex justify-between text-sm">
-            <span className="text-muted">Итого</span>
+            <span className="text-muted">{t.investorRoom.total}</span>
             <span className="text-brand-blue font-mono font-semibold">100%</span>
           </div>
         </div>
@@ -89,7 +92,7 @@ export default function InvestorRoom() {
         {/* Documents */}
         <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
           <h2 className="text-ink font-semibold mb-4 flex items-center gap-2 tracking-tightest">
-            <FileText size={16} className="text-brand-blue" /> Data Room
+            <FileText size={16} className="text-brand-blue" /> {t.investorRoom.dataRoomTitle}
           </h2>
           <div className="space-y-3">
             {documents.map(({ name, status, date }, idx) => (
@@ -106,9 +109,9 @@ export default function InvestorRoom() {
                     })}
                     className="hover:opacity-80 transition"
                   >
-                    <DocStatus status={status} />
+                    <DocStatus status={status} t={t} />
                   </button>
-                ) : <DocStatus status={status} />}
+                ) : <DocStatus status={status} t={t} />}
               </div>
             ))}
           </div>
@@ -117,7 +120,7 @@ export default function InvestorRoom() {
         {/* DD Summary */}
         <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
           <h2 className="text-ink font-semibold mb-4 flex items-center gap-2 tracking-tightest">
-            <TrendingUp size={16} className="text-brand-blue" /> DD Summary
+            <TrendingUp size={16} className="text-brand-blue" /> {t.investorRoom.ddSummaryTitle}
           </h2>
           <div className="space-y-3">
             {ddCategories.map(({ name, items }) => {
@@ -143,7 +146,7 @@ export default function InvestorRoom() {
 
       {/* DD Checklist detail */}
       <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
-        <h2 className="text-ink font-semibold mb-5 tracking-tightest">Детальный DD Checklist</h2>
+        <h2 className="text-ink font-semibold mb-5 tracking-tightest">{t.investorRoom.detailTitle}</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {ddCategories.map(({ name, items }, catIdx) => (
             <div key={name}>

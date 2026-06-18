@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
 
 function Logo() {
   return <span className="text-2xl font-bold tracking-tightest"><span className="text-brand-blue">Kerege</span><span className="text-brand-green">.ON</span></span>
@@ -8,6 +9,7 @@ function Logo() {
 
 export default function Login() {
   const { user, signIn, demoMode } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,7 +26,7 @@ export default function Login() {
       await signIn(email, password)
       navigate('/dashboard')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка входа')
+      setError(err instanceof Error ? err.message : t.login.loginError)
     } finally {
       setBusy(false)
     }
@@ -41,14 +43,13 @@ export default function Login() {
         <div className="text-center mb-8">
           <Logo />
           <p className="text-muted text-sm mt-2">
-            <span className="text-brand-green">You Create.</span>{' '}
-            <span className="text-brand-blue">We Protect.</span>
+            {t.login.subtitle}
           </p>
         </div>
 
         <form onSubmit={submit} className="bg-white border border-line rounded-2xl p-6 shadow-sm space-y-4">
           <div>
-            <label className="text-xs font-medium text-muted">Email</label>
+            <label className="text-xs font-medium text-muted">{t.login.email}</label>
             <input
               type="email"
               value={email}
@@ -59,7 +60,7 @@ export default function Login() {
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted">Пароль</label>
+            <label className="text-xs font-medium text-muted">{t.login.password}</label>
             <input
               type="password"
               value={password}
@@ -77,16 +78,16 @@ export default function Login() {
             disabled={busy}
             className="w-full bg-brand-blue text-white rounded-lg py-2.5 text-sm font-medium hover:opacity-90 transition disabled:opacity-60"
           >
-            {busy ? 'Вход…' : 'Войти'}
+            {busy ? t.login.signingIn : t.login.signIn}
           </button>
         </form>
 
         {demoMode && (
           <div className="mt-4 text-center">
-            <p className="text-muted text-xs mb-2">Demo-режим — войдите как:</p>
+            <p className="text-muted text-xs mb-2">{t.login.demoHint}</p>
             <div className="flex gap-2 justify-center">
-              <button onClick={() => demoLogin('admin')} className="text-xs border border-line bg-white rounded-lg px-3 py-1.5 hover:bg-brand-surface transition">Сотрудник (admin)</button>
-              <button onClick={() => demoLogin('client')} className="text-xs border border-line bg-white rounded-lg px-3 py-1.5 hover:bg-brand-surface transition">Клиент</button>
+              <button onClick={() => demoLogin('admin')} className="text-xs border border-line bg-white rounded-lg px-3 py-1.5 hover:bg-brand-surface transition">{t.login.demoAdmin}</button>
+              <button onClick={() => demoLogin('client')} className="text-xs border border-line bg-white rounded-lg px-3 py-1.5 hover:bg-brand-surface transition">{t.login.demoClient}</button>
             </div>
           </div>
         )}

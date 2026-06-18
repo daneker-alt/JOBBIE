@@ -2,6 +2,7 @@ import { AlertTriangle, Building2, Calendar, TrendingUp } from 'lucide-react'
 import SaveBar from '../components/SaveBar'
 import Checklist from '../components/Checklist'
 import { useWorkspace } from '../lib/useWorkspace'
+import { useLanguage } from '../context/LanguageContext'
 
 const calendarEvents = [
   { date: '20 июня 2025', title: 'Квартальный отчёт Q2', urgent: true },
@@ -13,8 +14,9 @@ const calendarEvents = [
 
 export default function AstanaHub() {
   const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
+  const { t } = useLanguage()
 
-  if (loading) return <div className="text-muted text-sm">Загрузка данных…</div>
+  if (loading) return <div className="text-muted text-sm">{t.common.loading}</div>
 
   const { hubEligibility, hubRequiredDocs, hubRevenue } = data
   const eligScore = hubEligibility.filter(i => i.done).length
@@ -28,23 +30,23 @@ export default function AstanaHub() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className={`border rounded-xl p-4 shadow-sm hover:shadow-md transition ${eligScore === hubEligibility.length ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`}>
-          <div className="text-muted text-xs mb-1">Eligibility</div>
+          <div className="text-muted text-xs mb-1">{t.astanaHub.eligibility}</div>
           <div className={`text-2xl font-mono font-semibold ${eligScore === hubEligibility.length ? 'text-green-700' : 'text-amber-700'}`}>
             {eligScore}/{hubEligibility.length}
           </div>
-          <div className="text-muted text-xs mt-1">критериев выполнено</div>
+          <div className="text-muted text-xs mt-1">{t.astanaHub.criteriaDone}</div>
         </div>
         <div className={`border rounded-xl p-4 shadow-sm hover:shadow-md transition ${avgIct >= 90 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-          <div className="text-muted text-xs mb-1">ИКТ-выручка (avg)</div>
+          <div className="text-muted text-xs mb-1">{t.astanaHub.ictRevenue}</div>
           <div className={`text-2xl font-mono font-semibold ${avgIct >= 90 ? 'text-green-700' : 'text-red-700'}`}>{avgIct}%</div>
           <div className={`text-xs mt-1 ${avgIct >= 90 ? 'text-green-700/70' : 'text-red-700/70'}`}>
-            {avgIct >= 90 ? 'Требование выполнено' : 'Ниже порога 90%'}
+            {avgIct >= 90 ? t.astanaHub.requirementMet : t.astanaHub.belowThreshold}
           </div>
         </div>
         <div className="bg-white border border-line rounded-xl p-4 shadow-sm hover:shadow-md transition">
-          <div className="text-muted text-xs mb-1">Документы</div>
+          <div className="text-muted text-xs mb-1">{t.astanaHub.documents}</div>
           <div className="text-2xl font-mono font-semibold text-brand-blue">{docScore}/{hubRequiredDocs.length}</div>
-          <div className="text-muted text-xs mt-1">готово</div>
+          <div className="text-muted text-xs mt-1">{t.astanaHub.ready}</div>
         </div>
       </div>
 
@@ -52,7 +54,7 @@ export default function AstanaHub() {
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
           <AlertTriangle size={18} className="text-red-600 mt-0.5 shrink-0" />
           <div>
-            <div className="text-red-700 font-semibold text-sm mb-1">Правило 90/10 нарушено</div>
+            <div className="text-red-700 font-semibold text-sm mb-1">{t.astanaHub.ruleBroken}</div>
             <div className="text-red-700/80 text-xs">
               Средняя ИКТ-выручка за период составляет <span className="font-mono">{avgIct}%</span>, что ниже обязательного порога 90%.
               Необходимо пересмотреть структуру выручки или контрактную базу до квартального отчёта.
@@ -65,7 +67,7 @@ export default function AstanaHub() {
         {/* Eligibility */}
         <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
           <h2 className="text-ink font-semibold mb-4 flex items-center gap-2 tracking-tightest">
-            <Building2 size={16} className="text-brand-blue" /> Eligibility Checker
+            <Building2 size={16} className="text-brand-blue" /> {t.astanaHub.eligibilityTitle}
           </h2>
           <Checklist
             items={hubEligibility}
@@ -77,7 +79,7 @@ export default function AstanaHub() {
         {/* Revenue Tracker */}
         <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
           <h2 className="text-ink font-semibold mb-4 flex items-center gap-2 tracking-tightest">
-            <TrendingUp size={16} className="text-brand-blue" /> 90/10 Revenue Track
+            <TrendingUp size={16} className="text-brand-blue" /> {t.astanaHub.revenueTrackTitle}
           </h2>
           <div className="space-y-3">
             {hubRevenue.map(({ month, ict, other }, idx) => (
@@ -103,8 +105,8 @@ export default function AstanaHub() {
                   </div>
                 )}
                 <div className="flex justify-between text-xs mt-0.5">
-                  <span className="text-muted">90% порог</span>
-                  <span className="text-muted font-mono">{other}% прочее</span>
+                  <span className="text-muted">{t.astanaHub.threshold}</span>
+                  <span className="text-muted font-mono">{other}% {t.astanaHub.other}</span>
                 </div>
               </div>
             ))}
@@ -114,14 +116,14 @@ export default function AstanaHub() {
         {/* Compliance Calendar */}
         <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
           <h2 className="text-ink font-semibold mb-4 flex items-center gap-2 tracking-tightest">
-            <Calendar size={16} className="text-brand-blue" /> Compliance Calendar
+            <Calendar size={16} className="text-brand-blue" /> {t.astanaHub.calendarTitle}
           </h2>
           <div className="space-y-3">
             {calendarEvents.map(({ date, title, urgent }) => (
               <div key={date} className={`rounded-xl p-3 border ${urgent ? 'bg-red-50 border-red-200' : 'bg-brand-surface border-line'}`}>
                 <div className="text-muted text-xs mb-0.5 font-mono">{date}</div>
                 <div className={`text-sm font-medium ${urgent ? 'text-red-700' : 'text-ink'}`}>{title}</div>
-                {urgent && <div className="text-red-700/70 text-xs mt-0.5">Срочно</div>}
+                {urgent && <div className="text-red-700/70 text-xs mt-0.5">{t.astanaHub.urgent}</div>}
               </div>
             ))}
           </div>
@@ -130,7 +132,7 @@ export default function AstanaHub() {
 
       {/* Required Docs */}
       <div className="bg-white border border-line rounded-2xl p-6 shadow-sm">
-        <h2 className="text-ink font-semibold mb-4 tracking-tightest">Обязательные документы для Astana Hub</h2>
+        <h2 className="text-ink font-semibold mb-4 tracking-tightest">{t.astanaHub.requiredDocsTitle}</h2>
         <div className="grid md:grid-cols-2 gap-3">
           <Checklist
             items={hubRequiredDocs}

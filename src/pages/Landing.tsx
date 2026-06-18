@@ -3,34 +3,9 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
 import SocialFloat from '../components/SocialFloat'
 import Assistant from '../components/Assistant'
+import { useLanguage } from '../context/LanguageContext'
 
-const stats = [
-  { value: '10', unit: 'мин', label: 'Legal Scan от анкеты до карты рисков' },
-  { value: '2', unit: 'нед', label: 'Roadmap и базовые документы' },
-  { value: '4', unit: 'зоны', label: 'IP · Данные · Договоры · Инвестор' },
-  { value: '90', unit: '/10', label: 'Структура выручки для Astana Hub' },
-]
-
-const capabilities = [
-  { name: 'Legal Scan', desc: 'Анкета превращается в карту рисков с приоритетами и legal roadmap по всем зонам стартапа.' },
-  { name: 'IP Registry', desc: 'Права на код, дизайн, модели и датасеты закреплены за компанией — отслеживаются по статусу владельца.' },
-  { name: 'Data & AI', desc: 'Privacy policy, согласия, локализация данных РК и AI-disclaimers в одном compliance-чеклисте.' },
-  { name: 'Astana Hub', desc: 'Проверка eligibility, контроль структуры выручки 90/10 и календарь отчётности резидента.' },
-  { name: 'Contracts', desc: 'MSA, SaaS Terms, SLA и пилотные соглашения — шаблоны, которые защищают оплату и продукт.' },
-  { name: 'Investor Room', desc: 'Cap table, SAFE/SHA, data room и ответы на due diligence — готовность к раунду в процентах.' },
-]
-
-const workflow = [
-  { phase: 'Scan', desc: 'Заполняете анкету — система собирает факты и показывает, где риски, что готово и что делать первым.' },
-  { phase: 'Fix', desc: 'Юрист закрывает задачи бэклога: оформляет IP, данные, договоры и структуру под Astana Hub.' },
-  { phase: 'Grow', desc: 'Продаёте по защищённым договорам, проходите DD и привлекаете инвестиции без правовых пробелов.' },
-]
-
-const packages = [
-  { name: 'Legal Sprint', price: '300 000', unit: '₸', desc: 'Scan, roadmap и первичный пакет документов за 1–2 недели.', cta: 'Стартовая точка', featured: false },
-  { name: 'Monthly LegalOps', price: '200 000', unit: '₸/мес', desc: 'Постоянный кабинет, задачи, мониторинг и Q&A. Юрист как часть команды.', cta: 'Популярный', featured: true },
-  { name: 'Investor Ready', price: '350 000', unit: '₸', desc: 'Cap table, data room, SAFE/SHA и ответы на DD за 3–4 недели.', cta: 'Перед раундом', featured: false },
-]
+const featuredPackageIndex = 1
 
 function Logo({ className = '' }: { className?: string }) {
   return (
@@ -41,6 +16,7 @@ function Logo({ className = '' }: { className?: string }) {
 }
 
 export default function Landing() {
+  const { t } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -51,9 +27,9 @@ export default function Landing() {
   }, [])
 
   const navLinks = [
-    { href: '#capabilities', label: 'Возможности' },
-    { href: '#how', label: 'Как работает' },
-    { href: '#pricing', label: 'Пакеты' },
+    { href: '#capabilities', label: t.landing.navCapabilities },
+    { href: '#how', label: t.landing.navHow },
+    { href: '#pricing', label: t.landing.navPricing },
   ]
 
   return (
@@ -71,10 +47,10 @@ export default function Landing() {
             ))}
           </nav>
           <div className="hidden md:flex items-center gap-2">
-            <Link to="/login" className="text-sm text-muted hover:text-ink px-3 py-2 transition-colors">Войти</Link>
-            <Link to="/scan" className="text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-4 py-2 rounded-md transition-opacity">Начать</Link>
+            <Link to="/login" className="text-sm text-muted hover:text-ink px-3 py-2 transition-colors">{t.landing.login}</Link>
+            <Link to="/scan" className="text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-4 py-2 rounded-md transition-opacity">{t.landing.start}</Link>
           </div>
-          <button className="md:hidden text-ink" onClick={() => setMenuOpen(v => !v)} aria-label="Меню">
+          <button className="md:hidden text-ink" onClick={() => setMenuOpen(v => !v)} aria-label={t.landing.menuAria}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
@@ -83,7 +59,7 @@ export default function Landing() {
             {navLinks.map(l => (
               <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="block text-sm text-muted hover:text-ink">{l.label}</a>
             ))}
-            <Link to="/scan" className="block text-sm font-medium text-white bg-brand-blue px-4 py-2 rounded-md text-center">Начать</Link>
+            <Link to="/scan" className="block text-sm font-medium text-white bg-brand-blue px-4 py-2 rounded-md text-center">{t.landing.start}</Link>
           </div>
         )}
       </header>
@@ -91,28 +67,28 @@ export default function Landing() {
       <section className="max-w-container mx-auto px-6 pt-40 pb-20">
         <div className="max-w-3xl animate-rise">
           <p className="text-xs uppercase tracking-[0.14em] text-muted mb-6">
-            Юридическая операционная система · AI / IT · Казахстан
+            {t.landing.eyebrow}
           </p>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tightest leading-[1.05] text-ink max-w-3xl">
-            Вы строите продукт.<br />
-            <span className="text-brand-green">Мы защищаем его</span> как систему.
+            {t.landing.heroTitle1}<br />
+            <span className="text-brand-green">{t.landing.heroTitle2}</span>
           </h1>
           <p className="mt-6 text-lg text-muted max-w-xl leading-relaxed">
-            Kerege.ON превращает юридические риски в управляемые задачи: владелец, статус, дедлайн, документ. От идеи и MVP до Astana Hub, IP, данных и инвестиций.
+            {t.landing.heroSubtitle}
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3">
             <Link to="/scan" className="inline-flex items-center justify-center gap-2 text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-6 py-3 rounded-md transition-opacity">
-              Пройти Legal Scan <ArrowRight size={16} />
+              {t.landing.ctaScan} <ArrowRight size={16} />
             </Link>
             <a href="#capabilities" className="inline-flex items-center justify-center gap-2 text-sm font-medium text-ink border border-line hover:bg-brand-surface px-6 py-3 rounded-md transition-colors">
-              Что внутри
+              {t.landing.ctaWhatsInside}
             </a>
           </div>
         </div>
 
         <div className="mt-20 pt-10 border-t border-line">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8">
-            {stats.map(s => (
+            {t.landing.stats.map(s => (
               <div key={s.label}>
                 <div className="font-mono text-4xl font-semibold text-brand-blue leading-none">
                   {s.value}<span className="text-xl text-muted">{s.unit}</span>
@@ -125,12 +101,12 @@ export default function Landing() {
       </section>
 
       <section id="capabilities" className="max-w-container mx-auto px-6 py-24 border-t border-line">
-        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">Возможности</p>
+        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">{t.landing.capabilitiesEyebrow}</p>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink max-w-2xl">
-          Один кабинет вместо писем, файлов и устных договорённостей
+          {t.landing.capabilitiesTitle}
         </h2>
         <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-line border border-line rounded-xl overflow-hidden">
-          {capabilities.map(c => (
+          {t.landing.capabilities.map(c => (
             <div key={c.name} className="group bg-white p-6 transition-colors hover:bg-brand-surface">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-base font-semibold text-ink">{c.name}</h3>
@@ -143,12 +119,12 @@ export default function Landing() {
       </section>
 
       <section id="how" className="max-w-container mx-auto px-6 py-24 border-t border-line">
-        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">Процесс</p>
+        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">{t.landing.processEyebrow}</p>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink max-w-2xl">
-          Три состояния, в которых живёт ваш стартап
+          {t.landing.processTitle}
         </h2>
         <div className="mt-12 grid md:grid-cols-3 gap-8">
-          {workflow.map((w, i) => (
+          {t.landing.workflow.map((w, i) => (
             <div key={w.phase} className="pt-6 border-t-2 border-brand-blue">
               <div className="flex items-baseline gap-3 mb-3">
                 <span className="font-mono text-sm text-muted">0{i + 1}</span>
@@ -161,37 +137,40 @@ export default function Landing() {
       </section>
 
       <section id="pricing" className="max-w-container mx-auto px-6 py-24 border-t border-line">
-        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">Пакеты</p>
+        <p className="text-xs uppercase tracking-[0.12em] text-muted mb-3">{t.landing.pricingEyebrow}</p>
         <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink max-w-2xl">
-          Выберите, что нужно сейчас. Можно комбинировать
+          {t.landing.pricingTitle}
         </h2>
         <div className="mt-12 grid md:grid-cols-3 gap-6">
-          {packages.map(p => (
-            <div key={p.name} className={`rounded-xl border p-7 transition-all hover:-translate-y-0.5 hover:shadow-md ${p.featured ? 'border-brand-blue bg-brand-blue text-white' : 'border-line bg-white'}`}>
-              <div className={`text-xs uppercase tracking-[0.1em] mb-4 ${p.featured ? 'text-brand-green' : 'text-muted'}`}>{p.cta}</div>
-              <h3 className={`text-lg font-semibold mb-2 ${p.featured ? 'text-white' : 'text-ink'}`}>{p.name}</h3>
-              <div className="mb-4 flex items-baseline gap-1">
-                <span className={`text-xs ${p.featured ? 'text-white/60' : 'text-muted'}`}>от</span>
-                <span className={`font-mono text-3xl font-semibold ${p.featured ? 'text-white' : 'text-brand-blue'}`}>{p.price}</span>
-                <span className={`text-sm ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.unit}</span>
+          {t.landing.packages.map((p, i) => {
+            const featured = i === featuredPackageIndex
+            return (
+              <div key={p.name} className={`rounded-xl border p-7 transition-all hover:-translate-y-0.5 hover:shadow-md ${featured ? 'border-brand-blue bg-brand-blue text-white' : 'border-line bg-white'}`}>
+                <div className={`text-xs uppercase tracking-[0.1em] mb-4 ${featured ? 'text-brand-green' : 'text-muted'}`}>{p.cta}</div>
+                <h3 className={`text-lg font-semibold mb-2 ${featured ? 'text-white' : 'text-ink'}`}>{p.name}</h3>
+                <div className="mb-4 flex items-baseline gap-1">
+                  <span className={`text-xs ${featured ? 'text-white/60' : 'text-muted'}`}>{t.landing.priceFrom}</span>
+                  <span className={`font-mono text-3xl font-semibold ${featured ? 'text-white' : 'text-brand-blue'}`}>{p.price}</span>
+                  <span className={`text-sm ${featured ? 'text-white/70' : 'text-muted'}`}>{p.unit}</span>
+                </div>
+                <p className={`text-sm leading-relaxed mb-6 ${featured ? 'text-white/70' : 'text-muted'}`}>{p.desc}</p>
+                <Link to="/scan" className={`inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-85 ${featured ? 'text-brand-green' : 'text-brand-blue'}`}>
+                  {t.landing.start} <ArrowRight size={14} />
+                </Link>
               </div>
-              <p className={`text-sm leading-relaxed mb-6 ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.desc}</p>
-              <Link to="/scan" className={`inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-85 ${p.featured ? 'text-brand-green' : 'text-brand-blue'}`}>
-                Начать <ArrowRight size={14} />
-              </Link>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 
       <section className="max-w-container mx-auto px-6 py-24 border-t border-line">
         <div className="max-w-2xl">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink">Начните с Legal Scan</h2>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-ink">{t.landing.closingTitle}</h2>
           <p className="mt-4 text-lg text-muted max-w-lg leading-relaxed">
-            Десять минут — и вы знаете, где находятся риски и какой документ нужен следующим. Без предоплаты, с фиксированной ценой этапов.
+            {t.landing.closingSubtitle}
           </p>
           <Link to="/scan" className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white bg-brand-blue hover:opacity-85 px-6 py-3 rounded-md transition-opacity">
-            Пройти Legal Scan <ArrowRight size={16} />
+            {t.landing.ctaScan} <ArrowRight size={16} />
           </Link>
         </div>
       </section>
@@ -205,7 +184,7 @@ export default function Landing() {
               <span className="text-brand-blue font-medium">We Protect.</span>
             </p>
           </div>
-          <div className="text-sm text-muted">Sarsembaev Kanat · AI Legal Counsel · PhD</div>
+          <div className="text-sm text-muted">{t.landing.footerCredit}</div>
           <a href="tel:+77017976342" className="font-mono text-sm text-ink hover:text-brand-blue transition-colors">+7 701 797 63 42</a>
         </div>
       </footer>

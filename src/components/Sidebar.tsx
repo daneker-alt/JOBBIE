@@ -1,18 +1,20 @@
 import { NavLink } from 'react-router-dom'
 import { LayoutDashboard, Search, Shield, Database, Building2, FileText, TrendingUp, Map } from 'lucide-react'
-
-const nav = [
-  { to: '/dashboard', label: 'Дашборд', icon: LayoutDashboard },
-  { to: '/scan', label: 'Legal Scan', icon: Search },
-  { to: '/ip', label: 'IP Реестр', icon: Shield },
-  { to: '/data', label: 'Data & AI', icon: Database },
-  { to: '/hub', label: 'Astana Hub', icon: Building2 },
-  { to: '/contracts', label: 'Договоры', icon: FileText },
-  { to: '/investor', label: 'Инвестиции', icon: TrendingUp },
-  { to: '/journey', label: 'Путь клиента', icon: Map },
-]
+import { useLanguage } from '../context/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Sidebar() {
+  const { t } = useLanguage()
+  const nav = [
+    { to: '/dashboard', label: t.nav.dashboard, icon: LayoutDashboard },
+    { to: '/scan', label: t.nav.scan, icon: Search },
+    { to: '/ip', label: t.nav.ip, icon: Shield },
+    { to: '/data', label: t.nav.data, icon: Database },
+    { to: '/hub', label: t.nav.hub, icon: Building2 },
+    { to: '/contracts', label: t.nav.contracts, icon: FileText },
+    { to: '/investor', label: t.nav.investor, icon: TrendingUp },
+    { to: '/journey', label: t.nav.journey, icon: Map },
+  ]
   return (
     <aside className="w-60 shrink-0 flex flex-col h-screen bg-[#0B2D6B]">
       <div className="px-5 py-6 border-b border-white/10">
@@ -36,9 +38,12 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
-      <div className="px-5 py-4 border-t border-white/10">
-        <div className="text-white/50 text-xs font-medium">Sarsembaev Kanat</div>
-        <div className="text-white/30 text-xs">AI Legal Counsel · PhD</div>
+      <div className="px-5 py-4 border-t border-white/10 space-y-3">
+        <LanguageSwitcher />
+        <div>
+          <div className="text-white/50 text-xs font-medium">Sarsembaev Kanat</div>
+          <div className="text-white/30 text-xs">AI Legal Counsel · PhD</div>
+        </div>
       </div>
     </aside>
   )

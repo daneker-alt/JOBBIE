@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
@@ -16,20 +17,20 @@ import ContractsHub from './pages/ContractsHub'
 import InvestorRoom from './pages/InvestorRoom'
 import ClientJourney from './pages/ClientJourney'
 
-const pageTitles: Record<string, string> = {
-  '/dashboard': 'Дашборд',
-  '/scan': 'Legal Scan',
-  '/ip': 'IP Реестр',
-  '/data': 'Data & AI',
-  '/hub': 'Astana Hub',
-  '/contracts': 'Договоры',
-  '/investor': 'Investor Room',
-  '/journey': 'Client Journey',
-}
-
 function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation()
-  const title = pageTitles[location.pathname] || 'LegalOS'
+  const { t } = useLanguage()
+  const pageTitles: Record<string, string> = {
+    '/dashboard': t.nav.dashboard,
+    '/scan': t.nav.scan,
+    '/ip': t.nav.ip,
+    '/data': t.nav.data,
+    '/hub': t.nav.hub,
+    '/contracts': t.nav.contracts,
+    '/investor': t.nav.investor,
+    '/journey': t.nav.journey,
+  }
+  const title = pageTitles[location.pathname] || t.header.appTitle
   return (
     <div className="flex h-screen bg-[#F3F5F7] overflow-hidden">
       <Sidebar />
@@ -55,19 +56,21 @@ function Protected({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
-        <Route path="/scan" element={<Protected><LegalScan /></Protected>} />
-        <Route path="/ip" element={<Protected><IPRegistry /></Protected>} />
-        <Route path="/data" element={<Protected><DataAI /></Protected>} />
-        <Route path="/hub" element={<Protected><AstanaHub /></Protected>} />
-        <Route path="/contracts" element={<Protected><ContractsHub /></Protected>} />
-        <Route path="/investor" element={<Protected><InvestorRoom /></Protected>} />
-        <Route path="/journey" element={<Protected><ClientJourney /></Protected>} />
-      </Routes>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+          <Route path="/scan" element={<Protected><LegalScan /></Protected>} />
+          <Route path="/ip" element={<Protected><IPRegistry /></Protected>} />
+          <Route path="/data" element={<Protected><DataAI /></Protected>} />
+          <Route path="/hub" element={<Protected><AstanaHub /></Protected>} />
+          <Route path="/contracts" element={<Protected><ContractsHub /></Protected>} />
+          <Route path="/investor" element={<Protected><InvestorRoom /></Protected>} />
+          <Route path="/journey" element={<Protected><ClientJourney /></Protected>} />
+        </Routes>
+      </AuthProvider>
+    </LanguageProvider>
   )
 }

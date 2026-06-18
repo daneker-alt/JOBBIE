@@ -2,77 +2,38 @@ import { CheckCircle, Circle, ArrowRight, FileText, Shield, Building2, TrendingU
 import { Link } from 'react-router-dom'
 import SaveBar from '../components/SaveBar'
 import { useWorkspace } from '../lib/useWorkspace'
+import { useLanguage } from '../context/LanguageContext'
 import type { JourneyStep } from '../lib/types'
 
-const stepMeta = [
-  {
-    num: 1,
-    stage: 'Idea',
-    title: 'Legal Scan',
-    desc: 'Анкета, карта рисков, legal roadmap. Понимаем что есть и что нужно.',
-    icon: Search,
-    path: '/scan',
-    docs: ['Legal Scan анкета', 'Risk Map', 'Legal Roadmap', 'Backlog задач'],
-  },
-  {
-    num: 2,
-    stage: 'MVP',
-    title: 'IP + Data',
-    desc: 'IP assignment для основателей и подрядчиков. Privacy policy и consent.',
-    icon: Shield,
-    path: '/ip',
-    docs: ['IP Assignment (founders)', 'IP Assignment (contractors)', 'Privacy Policy', 'Data Consent Form'],
-  },
-  {
-    num: 3,
-    stage: 'Pilot',
-    title: 'POC / SLA',
-    desc: 'Договор на пилот. SLA с метриками. Защита оплаты и результата.',
-    icon: FileText,
-    path: '/contracts',
-    docs: ['POC Agreement', 'SLA Template', 'Acceptance Criteria', 'Invoice Template'],
-  },
-  {
-    num: 4,
-    stage: 'Hub',
-    title: '90/10',
-    desc: 'Eligibility check для Astana Hub. Структура выручки 90% ИКТ.',
-    icon: Building2,
-    path: '/hub',
-    docs: ['Eligibility Assessment', '90/10 Revenue Structure', 'Hub Application', 'Compliance Calendar'],
-  },
-  {
-    num: 5,
-    stage: 'Sales',
-    title: 'Contracts',
-    desc: 'MSA, SaaS Terms, SLA для масштабирования. Защита продукта и оплаты.',
-    icon: FileText,
-    path: '/contracts',
-    docs: ['Master Service Agreement', 'SaaS Terms of Service', 'SLA', 'NDA Package'],
-  },
-  {
-    num: 6,
-    stage: 'Invest',
-    title: 'Data Room',
-    desc: 'Cap table, SAFE/SHA, data room и DD checklist для инвестора.',
-    icon: TrendingUp,
-    path: '/investor',
-    docs: ['Cap Table', 'SAFE / SHA', 'Data Room Package', 'DD Answers'],
-  },
+const stepIconsAndPaths = [
+  { num: 1, icon: Search, path: '/scan' },
+  { num: 2, icon: Shield, path: '/ip' },
+  { num: 3, icon: FileText, path: '/contracts' },
+  { num: 4, icon: Building2, path: '/hub' },
+  { num: 5, icon: FileText, path: '/contracts' },
+  { num: 6, icon: TrendingUp, path: '/investor' },
 ]
-
-const statusConfig = {
-  done: { label: 'Завершён', cls: 'text-green-700 bg-green-50 border-green-200' },
-  'in-progress': { label: 'В работе', cls: 'text-amber-700 bg-amber-50 border-amber-200' },
-  pending: { label: 'Ожидает', cls: 'text-muted bg-brand-surface border-line' },
-}
 
 const statusCycle: JourneyStep['status'][] = ['pending', 'in-progress', 'done']
 
 export default function ClientJourney() {
+  const { t } = useLanguage()
   const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
 
-  if (loading) return <div className="text-muted text-sm">Загрузка данных…</div>
+  if (loading) return <div className="text-muted text-sm">{t.common.loading}</div>
+
+  const statusConfig = {
+    done: { label: t.clientJourney.statusLabels.done, cls: 'text-green-700 bg-green-50 border-green-200' },
+    'in-progress': { label: t.clientJourney.statusLabels['in-progress'], cls: 'text-amber-700 bg-amber-50 border-amber-200' },
+    pending: { label: t.clientJourney.statusLabels.pending, cls: 'text-muted bg-brand-surface border-line' },
+  }
+
+  const stepMeta = t.clientJourney.steps.map((meta, idx) => ({
+    ...meta,
+    num: stepIconsAndPaths[idx].num,
+    icon: stepIconsAndPaths[idx].icon,
+    path: stepIconsAndPaths[idx].path,
+  }))
 
   const steps = stepMeta.map(meta => ({
     ...meta,
@@ -88,19 +49,19 @@ export default function ClientJourney() {
       <div className="flex items-center gap-6 p-4 bg-white border border-line rounded-xl shadow-sm">
         <div className="text-center">
           <div className="text-2xl font-mono font-semibold text-green-700">{doneCount}</div>
-          <div className="text-muted text-xs">Завершено</div>
+          <div className="text-muted text-xs">{t.clientJourney.completed}</div>
         </div>
         <div className="text-center">
           <div className="text-2xl font-mono font-semibold text-amber-700">{inProgressCount}</div>
-          <div className="text-muted text-xs">В работе</div>
+          <div className="text-muted text-xs">{t.clientJourney.inProgress}</div>
         </div>
         <div className="text-center">
           <div className="text-2xl font-mono font-semibold text-muted">{steps.length - doneCount - inProgressCount}</div>
-          <div className="text-muted text-xs">Ожидает</div>
+          <div className="text-muted text-xs">{t.clientJourney.pending}</div>
         </div>
         <div className="flex-1">
           <div className="flex justify-between text-xs mb-1">
-            <span className="text-muted">Общий прогресс</span>
+            <span className="text-muted">{t.clientJourney.overallProgress}</span>
             <span className="text-brand-blue font-mono">{Math.round(((doneCount + inProgressCount * 0.5) / steps.length) * 100)}%</span>
           </div>
           <div className="w-full bg-line rounded-full h-2">
@@ -170,7 +131,7 @@ export default function ClientJourney() {
                       to={step.path}
                       className="flex items-center gap-1 text-brand-blue hover:opacity-85 text-xs transition-colors"
                     >
-                      Открыть <ArrowRight size={12} />
+                      {t.common.open} <ArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
