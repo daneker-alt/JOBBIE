@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { useLanguage } from '../context/LanguageContext'
 import type { ContractTemplate } from '../lib/types'
 import type { Dict } from '../i18n/types'
-import { downloadContract } from '../lib/contracts/generate'
+import { downloadContract, downloadContractPdf } from '../lib/contracts/generate'
 import { signWithNcaLayer, sha256Hex } from '../lib/signature'
 import { pushAudit } from '../lib/audit'
 
@@ -100,6 +100,7 @@ export default function ContractsHub() {
   const { user } = useAuth()
   const { t } = useLanguage()
   const [downloading, setDownloading] = useState<string | null>(null)
+  const [downloadingPdf, setDownloadingPdf] = useState<string | null>(null)
   const [signingIdx, setSigningIdx] = useState<number | null>(null)
 
   if (loading) return <div className="text-muted text-sm">{t.common.loading}</div>
@@ -116,9 +117,24 @@ export default function ContractsHub() {
         counterparty: matchedContract?.client,
         assetDescription: riskyAsset ? `${riskyAsset.name} (${riskyAsset.type})` : undefined,
       })
-      update(d => pushAudit(d, user?.email || 'admin', 'Скачан шаблон договора', name))
+      update(d => pushAudit(d, user?.email || 'admin', 'Скачан шаблон договора (.docx)', name))
     } finally {
       setDownloading(null)
+    }
+  }
+
+  async function handleDownloadPdf(name: string) {
+    setDownloadingPdf(name)
+    try {
+      const matchedContract = activeContracts.find(c => name.startsWith(c.type.split(' ')[0]) || c.type.includes(name.split(' ')[0]))
+      const riskyAsset = ipAssets.find(a => a.status === 'risk')
+      await downloadContractPdf(name, companyProfile, {
+        counterparty: matchedContract?.client,
+        assetDescription: riskyAsset ? `${riskyAsset.name} (${riskyAsset.type})` : undefined,
+      })
+      update(d => pushAudit(d, user?.email || 'admin', 'Скачан шаблон договора (.pdf)', name))
+    } finally {
+      setDownloadingPdf(null)
     }
   }
 
@@ -172,13 +188,22 @@ export default function ContractsHub() {
               </div>
               <div className="flex items-center justify-between mt-3">
                 <span className={`text-xs border px-2 py-0.5 rounded-full ${typeColors[type] || 'text-muted bg-brand-surface border-line'}`}>{type}</span>
-                <button
-                  onClick={() => handleDownload(name)}
-                  disabled={downloading === name}
-                  className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors disabled:opacity-50"
-                >
-                  {downloading === name ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />} {t.common.download}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handleDownloadPdf(name)}
+                    disabled={downloadingPdf === name}
+                    className="flex items-center gap-1.5 text-muted hover:text-brand-blue text-xs transition-colors disabled:opacity-50"
+                  >
+                    {downloadingPdf === name ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />} PDF
+                  </button>
+                  <button
+                    onClick={() => handleDownload(name)}
+                    disabled={downloading === name}
+                    className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors disabled:opacity-50"
+                  >
+                    {downloading === name ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />} {t.common.download}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
