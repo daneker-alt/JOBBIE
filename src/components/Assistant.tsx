@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { MessageCircle, X, Send } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { useWorkspace } from '../lib/useWorkspace'
+import { askAssistant, summarizeWorkspace, aiAssistantAvailable, type ChatMessage as AssistantHistoryMessage } from '../lib/assistant'
 
 const faq = [
   { keywords: ['ip', 'права', 'код', 'assignment'], answer: 'IP Assignment оформляется между компанией и каждым основателем/подрядчиком. Это защищает права на код, дизайн и модели. Раздел IP Реестр поможет отследить статус.' },
@@ -27,7 +29,8 @@ function getAnswer(msg: string, fallback: string): string {
 }
 
 export default function Assistant() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
+  const { data } = useWorkspace()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', text: t.assistant.greeting }
@@ -40,12 +43,26 @@ export default function Assistant() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, thinking])
 
-  function send() {
+  async function send() {
     const text = input.trim()
     if (!text || thinking) return
     setInput('')
+    const history: AssistantHistoryMessage[] = messages.map(m => ({ role: m.role, text: m.text }))
     setMessages(prev => [...prev, { role: 'user', text }])
     setThinking(true)
+
+    if (aiAssistantAvailable) {
+      try {
+        const reply = await askAssistant(text, history, summarizeWorkspace(data), lang)
+        setMessages(prev => [...prev, { role: 'assistant', text: reply }])
+      } catch {
+        setMessages(prev => [...prev, { role: 'assistant', text: getAnswer(text, t.assistant.fallback) }])
+      } finally {
+        setThinking(false)
+      }
+      return
+    }
+
     setTimeout(() => {
       setMessages(prev => [...prev, { role: 'assistant', text: getAnswer(text, t.assistant.fallback) }])
       setThinking(false)
