@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Search, Shield, Database, Building2, FileText, TrendingUp, Map } from 'lucide-react'
+import { LayoutDashboard, Search, Shield, Database, Building2, FileText, TrendingUp, Map, Users } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import LanguageSwitcher from './LanguageSwitcher'
 
@@ -14,6 +14,7 @@ export default function Sidebar() {
     { to: '/contracts', label: t.nav.contracts, icon: FileText },
     { to: '/investor', label: t.nav.investor, icon: TrendingUp },
     { to: '/journey', label: t.nav.journey, icon: Map },
+    { to: '/team', label: t.nav.team, icon: Users },
   ]
   return (
     <aside className="w-60 shrink-0 flex flex-col h-screen bg-[#0B2D6B]">

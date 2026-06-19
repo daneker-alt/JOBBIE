@@ -11,7 +11,7 @@ const ru: Dict = {
   },
   nav: {
     dashboard: 'Дашборд', scan: 'Legal Scan', ip: 'IP Реестр', data: 'Data & AI',
-    hub: 'Astana Hub', contracts: 'Договоры', investor: 'Investor Room', journey: 'Client Journey',
+    hub: 'Astana Hub', contracts: 'Договоры', investor: 'Investor Room', journey: 'Client Journey', team: 'Команда',
     tagline: 'Юридическая ОС для AI/IT стартапов',
   },
   header: { aiAssistant: 'AI Health Assistant', appTitle: 'LegalOS' },

@@ -11,6 +11,11 @@ export const defaultWorkspace: WorkspaceData = {
     bank: 'АО «Kaspi Bank»',
     bik: 'CASPKZKA',
   },
+  team: [
+    { id: 'u1', name: 'Алибек Нурланов', email: 'admin@kerege.kz', role: 'admin', invitedAt: '2025-01-10' },
+    { id: 'u2', name: 'MedLab KZ', email: 'client@kerege.kz', role: 'client', invitedAt: '2025-04-01' },
+  ],
+  auditLog: [],
   risks: [
     { label: 'IP', score: 40 },
     { label: 'Data', score: 55 },

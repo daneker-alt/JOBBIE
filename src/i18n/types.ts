@@ -30,6 +30,7 @@ export interface Dict {
     contracts: string
     investor: string
     journey: string
+    team: string
     tagline: string
   }
   header: {

@@ -74,12 +74,38 @@ export interface ContractTemplate {
   status: 'ready' | 'review' | 'draft'
 }
 
+export interface SignatureRecord {
+  method: 'ncalayer' | 'simple'
+  signerName: string
+  signerCert?: string
+  hash: string
+  signedAt: string
+  cms?: string
+}
+
 export interface ActiveContract {
   client: string
   type: string
   signed: string
   expiry: string
   status: 'active' | 'risk'
+  signature?: SignatureRecord
+}
+
+export interface AuditEntry {
+  id: string
+  timestamp: string
+  actor: string
+  action: string
+  target: string
+}
+
+export interface TeamMember {
+  id: string
+  name: string
+  email: string
+  role: 'admin' | 'client'
+  invitedAt: string
 }
 
 export interface DDCategory {
@@ -110,6 +136,8 @@ export interface CompanyProfile {
 
 export interface WorkspaceData {
   companyProfile: CompanyProfile
+  team: TeamMember[]
+  auditLog: AuditEntry[]
   risks: RiskCategory[]
   documents: WorkspaceDoc[]
   tasks: WorkspaceTask[]

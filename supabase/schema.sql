@@ -60,3 +60,24 @@ create policy "ws_insert" on public.workspaces
 drop policy if exists "ws_update" on public.workspaces;
 create policy "ws_update" on public.workspaces
   for update using (public.is_admin()) with check (public.is_admin());
+
+-- 4. Журнал аудита — append-only, без update/delete (для инвесторов и due diligence).
+create table if not exists public.audit_log (
+  id uuid primary key default gen_random_uuid(),
+  workspace_owner_id uuid not null references auth.users(id) on delete cascade,
+  actor text not null,
+  action text not null,
+  target text not null,
+  created_at timestamptz default now()
+);
+
+alter table public.audit_log enable row level security;
+
+drop policy if exists "audit_select" on public.audit_log;
+create policy "audit_select" on public.audit_log
+  for select using (workspace_owner_id = auth.uid() or public.is_admin());
+
+drop policy if exists "audit_insert" on public.audit_log;
+create policy "audit_insert" on public.audit_log
+  for insert with check (workspace_owner_id = auth.uid() or public.is_admin());
+-- Намеренно нет policy для update/delete — журнал неизменяем.

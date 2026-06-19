@@ -16,6 +16,7 @@ import AstanaHub from './pages/AstanaHub'
 import ContractsHub from './pages/ContractsHub'
 import InvestorRoom from './pages/InvestorRoom'
 import ClientJourney from './pages/ClientJourney'
+import Team from './pages/Team'
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation()
@@ -29,6 +30,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     '/contracts': t.nav.contracts,
     '/investor': t.nav.investor,
     '/journey': t.nav.journey,
+    '/team': t.nav.team,
   }
   const title = pageTitles[location.pathname] || t.header.appTitle
   return (
@@ -69,6 +71,7 @@ export default function App() {
           <Route path="/contracts" element={<Protected><ContractsHub /></Protected>} />
           <Route path="/investor" element={<Protected><InvestorRoom /></Protected>} />
           <Route path="/journey" element={<Protected><ClientJourney /></Protected>} />
+          <Route path="/team" element={<Protected><Team /></Protected>} />
         </Routes>
       </AuthProvider>
     </LanguageProvider>

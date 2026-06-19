@@ -11,7 +11,7 @@ const kk: Dict = {
   },
   nav: {
     dashboard: 'Дашборд', scan: 'Legal Scan', ip: 'IP Тізілімі', data: 'Data & AI',
-    hub: 'Astana Hub', contracts: 'Шарттар', investor: 'Investor Room', journey: 'Клиент жолы',
+    hub: 'Astana Hub', contracts: 'Шарттар', investor: 'Investor Room', journey: 'Клиент жолы', team: 'Топ',
     tagline: 'AI/IT стартаптары үшін заңдық ОЖ',
   },
   header: { aiAssistant: 'AI Health Assistant', appTitle: 'LegalOS' },
