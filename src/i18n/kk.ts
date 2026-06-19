@@ -100,6 +100,7 @@ const kk: Dict = {
     ],
     ctaText: 'Платформа форматында толық legal roadmap және тапсырмалар backlog алыңыз',
     retake: 'Қайта өту', orderFull: 'Толық Legal Scan тапсырыс беру',
+    savedNote: 'Нәтижелер Dashboard-қа сақталды — аймақтар бойынша тәуекелдер жаңартылды',
   },
   dashboard: {
     riskLabels: { IP: 'IP', Data: 'Data', Hub: 'Hub', Sales: 'Sales', Investor: 'Investor' },
@@ -147,6 +148,7 @@ const kk: Dict = {
     docsCount: 'Құжаттар', readyTotal: 'дайын / барлығы',
     capTableTitle: 'Cap Table', total: 'Барлығы', dataRoomTitle: 'Data Room', ddSummaryTitle: 'DD Summary',
     detailTitle: 'Толық DD Checklist',
+    exportDataRoom: 'Data Room экспорттау',
     docStatus: { signed: 'Қол қойылған', ready: 'Дайын', draft: 'Жоба' },
   },
   clientJourney: {

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
+import { useWorkspace } from '../lib/useWorkspace'
+import { pushAudit } from '../lib/audit'
+import { notifyTeam } from '../lib/notify'
 
 const stages = ['idea', 'mvp', 'pilot', 'hub', 'sales', 'invest']
 
@@ -72,6 +75,7 @@ function calcRisk(form: FormData) {
 
 export default function LegalScan() {
   const { t } = useLanguage()
+  const { data: workspace, update: updateWorkspace, save, dirty, saving, isAdmin } = useWorkspace()
   const steps = t.legalScan.steps.map((s, i) => ({ id: i + 1, title: s.title, subtitle: s.subtitle }))
   const stageLabels = t.legalScan.stageLabels
   const optionLabels = [t.common.yes, t.common.no, t.common.partial]
@@ -81,9 +85,32 @@ export default function LegalScan() {
   const update = (k: keyof FormData, v: string) => setForm(f => ({ ...f, [k]: v }))
   const risk = calcRisk(form)
 
+  function finishScan() {
+    setDone(true)
+    if (!isAdmin) return
+    updateWorkspace(d => {
+      d.risks[0].score = risk.ip
+      d.risks[1].score = risk.data
+      d.risks[3].score = risk.sales
+      d.risks[4].score = risk.invest
+      pushAudit(d, 'admin', 'Legal Scan', form.companyName || t.legalScan.companyFallback)
+    })
+    notifyTeam(workspace, 'Kerege.ON: новый Legal Scan',
+      `Пройден Legal Scan для ${form.companyName || t.legalScan.companyFallback}. Общий риск-балл: ${risk.overall}/100.`)
+  }
+
   if (done) {
     return (
       <div className="max-w-3xl mx-auto">
+        {isAdmin && (
+          <div className="flex items-center justify-end gap-3 mb-4">
+            {!dirty && <span className="text-green-700 text-xs">{t.legalScan.savedNote}</span>}
+            <button onClick={save} disabled={!dirty || saving}
+              className="bg-brand-blue hover:opacity-85 disabled:opacity-40 text-white text-xs font-medium px-4 py-2 rounded-lg transition-colors">
+              {saving ? t.common.loading : t.common.save}
+            </button>
+          </div>
+        )}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-brand-surface border border-line rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle size={28} className="text-brand-green" />
@@ -232,7 +259,7 @@ export default function LegalScan() {
               {t.legalScan.next} <ArrowRight size={16} />
             </button>
           ) : (
-            <button onClick={() => setDone(true)}
+            <button onClick={finishScan}
               className="flex items-center gap-2 bg-brand-green hover:opacity-85 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
               <CheckCircle size={16} /> {t.legalScan.getMap}
             </button>

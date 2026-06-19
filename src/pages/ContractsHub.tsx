@@ -9,6 +9,7 @@ import type { Dict } from '../i18n/types'
 import { downloadContract, downloadContractPdf } from '../lib/contracts/generate'
 import { signWithNcaLayer, sha256Hex } from '../lib/signature'
 import { pushAudit } from '../lib/audit'
+import { notifyTeam } from '../lib/notify'
 
 const typeColors: Record<string, string> = {
   Sales: 'text-blue-700 bg-blue-50 border-blue-200',
@@ -276,6 +277,8 @@ export default function ContractsHub() {
               d.activeContracts[signingIdx].signature = { ...sig, signedAt: new Date().toISOString() }
               pushAudit(d, user?.email || 'admin', sig.method === 'ncalayer' ? 'Подписан ЭЦП НУЦ РК' : 'Подписан упрощённой подписью', d.activeContracts[signingIdx].client)
             })
+            notifyTeam(data, 'Kerege.ON: договор подписан',
+              `Договор с ${activeContracts[signingIdx].client} подписан (${sig.method === 'ncalayer' ? 'ЭЦП НУЦ РК' : 'упрощённая подпись'}).`)
             setTimeout(() => setSigningIdx(null), 1200)
           }}
         />

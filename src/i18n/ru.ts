@@ -100,6 +100,7 @@ const ru: Dict = {
     ],
     ctaText: 'Получите полный legal roadmap и backlog задач в формате платформы',
     retake: 'Пройти заново', orderFull: 'Заказать полный Legal Scan',
+    savedNote: 'Результаты сохранены в Dashboard — риски по зонам обновлены',
   },
   dashboard: {
     riskLabels: { IP: 'IP', Data: 'Data', Hub: 'Hub', Sales: 'Sales', Investor: 'Investor' },
@@ -147,6 +148,7 @@ const ru: Dict = {
     docsCount: 'Документов', readyTotal: 'готово / всего',
     capTableTitle: 'Cap Table', total: 'Итого', dataRoomTitle: 'Data Room', ddSummaryTitle: 'DD Summary',
     detailTitle: 'Детальный DD Checklist',
+    exportDataRoom: 'Экспорт Data Room',
     docStatus: { signed: 'Подписан', ready: 'Готов', draft: 'Черновик' },
   },
   clientJourney: {

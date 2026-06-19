@@ -115,6 +115,7 @@ export interface Dict {
     ctaText: string
     retake: string
     orderFull: string
+    savedNote: string
   }
   dashboard: {
     riskLabels: Record<string, string>
@@ -211,6 +212,7 @@ export interface Dict {
     dataRoomTitle: string
     ddSummaryTitle: string
     detailTitle: string
+    exportDataRoom: string
     docStatus: Record<string, string>
   }
   clientJourney: {

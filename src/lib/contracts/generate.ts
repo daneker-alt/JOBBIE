@@ -48,7 +48,7 @@ export function buildContractDoc(key: string, profile: CompanyProfile, ctx: Gene
   }
 }
 
-function docToParagraphs(doc: ContractDoc): Paragraph[] {
+export function docToParagraphs(doc: ContractDoc): Paragraph[] {
   const paragraphs: Paragraph[] = []
 
   paragraphs.push(new Paragraph({

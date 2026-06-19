@@ -1,8 +1,12 @@
-import { TrendingUp, FileText, Users } from 'lucide-react'
+import { useState } from 'react'
+import { TrendingUp, FileText, Users, Archive, Loader2 } from 'lucide-react'
 import SaveBar from '../components/SaveBar'
 import Checklist from '../components/Checklist'
 import { useWorkspace } from '../lib/useWorkspace'
 import { useLanguage } from '../context/LanguageContext'
+import { downloadDataRoom } from '../lib/dataroom'
+import { pushAudit } from '../lib/audit'
+import { notifyTeam } from '../lib/notify'
 import type { Dict } from '../i18n/types'
 
 const capTable = [
@@ -23,6 +27,7 @@ function DocStatus({ status, t }: { status: string; t: Dict }) {
 export default function InvestorRoom() {
   const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
   const { t } = useLanguage()
+  const [exporting, setExporting] = useState(false)
 
   if (loading) return <div className="text-muted text-sm">{t.common.loading}</div>
 
@@ -31,9 +36,27 @@ export default function InvestorRoom() {
   const doneItems = ddCategories.reduce((s, c) => s + c.items.filter(i => i.done).length, 0)
   const readinessScore = Math.round((doneItems / totalItems) * 100)
 
+  async function handleExportDataRoom() {
+    setExporting(true)
+    try {
+      await downloadDataRoom(data)
+      update(d => pushAudit(d, isAdmin ? 'admin' : 'client', t.investorRoom.exportDataRoom, data.companyProfile.name))
+      notifyTeam(data, 'Kerege.ON: экспорт Data Room', `Data Room для ${data.companyProfile.name} был экспортирован.`)
+    } finally {
+      setExporting(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <SaveBar isAdmin={isAdmin} dirty={dirty} saving={saving} onSave={save} />
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex-1"><SaveBar isAdmin={isAdmin} dirty={dirty} saving={saving} onSave={save} /></div>
+        <button onClick={handleExportDataRoom} disabled={exporting}
+          className="flex items-center gap-2 bg-brand-blue hover:opacity-85 disabled:opacity-40 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-colors shrink-0">
+          {exporting ? <Loader2 size={16} className="animate-spin" /> : <Archive size={16} />}
+          {t.investorRoom.exportDataRoom}
+        </button>
+      </div>
 
       {/* Score */}
       <div className="grid grid-cols-3 gap-4">
