@@ -1,9 +1,11 @@
-import { FileText, Download, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
+import { useState } from 'react'
+import { FileText, Download, CheckCircle, AlertTriangle, Clock, Loader2 } from 'lucide-react'
 import SaveBar from '../components/SaveBar'
 import { useWorkspace } from '../lib/useWorkspace'
 import { useLanguage } from '../context/LanguageContext'
 import type { ContractTemplate } from '../lib/types'
 import type { Dict } from '../i18n/types'
+import { downloadContract } from '../lib/contracts/generate'
 
 const typeColors: Record<string, string> = {
   Sales: 'text-blue-700 bg-blue-50 border-blue-200',
@@ -23,11 +25,26 @@ function TemplateBadge({ status, t }: { status: string; t: Dict }) {
 export default function ContractsHub() {
   const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
   const { t } = useLanguage()
+  const [downloading, setDownloading] = useState<string | null>(null)
 
   if (loading) return <div className="text-muted text-sm">{t.common.loading}</div>
 
-  const { contractTemplates: templates, activeContracts } = data
+  const { contractTemplates: templates, activeContracts, companyProfile, ipAssets } = data
   const readyCount = templates.filter(t => t.status === 'ready').length
+
+  async function handleDownload(name: string) {
+    setDownloading(name)
+    try {
+      const matchedContract = activeContracts.find(c => name.startsWith(c.type.split(' ')[0]) || c.type.includes(name.split(' ')[0]))
+      const riskyAsset = ipAssets.find(a => a.status === 'risk')
+      await downloadContract(name, companyProfile, {
+        counterparty: matchedContract?.client,
+        assetDescription: riskyAsset ? `${riskyAsset.name} (${riskyAsset.type})` : undefined,
+      })
+    } finally {
+      setDownloading(null)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -79,8 +96,12 @@ export default function ContractsHub() {
               </div>
               <div className="flex items-center justify-between mt-3">
                 <span className={`text-xs border px-2 py-0.5 rounded-full ${typeColors[type] || 'text-muted bg-brand-surface border-line'}`}>{type}</span>
-                <button className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors">
-                  <Download size={12} /> {t.common.download}
+                <button
+                  onClick={() => handleDownload(name)}
+                  disabled={downloading === name}
+                  className="flex items-center gap-1.5 text-brand-blue hover:opacity-85 text-xs transition-colors disabled:opacity-50"
+                >
+                  {downloading === name ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />} {t.common.download}
                 </button>
               </div>
             </div>

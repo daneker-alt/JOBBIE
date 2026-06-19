@@ -98,7 +98,18 @@ export interface JourneyStep {
   status: 'done' | 'in-progress' | 'pending'
 }
 
+export interface CompanyProfile {
+  name: string
+  bin: string
+  address: string
+  director: string
+  iban: string
+  bank: string
+  bik: string
+}
+
 export interface WorkspaceData {
+  companyProfile: CompanyProfile
   risks: RiskCategory[]
   documents: WorkspaceDoc[]
   tasks: WorkspaceTask[]

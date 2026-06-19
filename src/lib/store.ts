@@ -2,6 +2,15 @@ import { supabase, isSupabaseConfigured } from './supabase'
 import type { WorkspaceData } from './types'
 
 export const defaultWorkspace: WorkspaceData = {
+  companyProfile: {
+    name: 'ТОО «AI Health Assistant»',
+    bin: '230140012345',
+    address: 'г. Астана, р-н Есиль, пр. Мангилик Ел, 55/20',
+    director: 'Алибек Нурланов',
+    iban: 'KZ123456789012345678',
+    bank: 'АО «Kaspi Bank»',
+    bik: 'CASPKZKA',
+  },
   risks: [
     { label: 'IP', score: 40 },
     { label: 'Data', score: 55 },
