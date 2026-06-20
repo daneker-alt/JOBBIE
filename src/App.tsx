@@ -17,6 +17,9 @@ import ContractsHub from './pages/ContractsHub'
 import InvestorRoom from './pages/InvestorRoom'
 import ClientJourney from './pages/ClientJourney'
 import Team from './pages/Team'
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
+import NotFound from './pages/NotFound'
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation()
@@ -72,6 +75,9 @@ export default function App() {
           <Route path="/investor" element={<Protected><InvestorRoom /></Protected>} />
           <Route path="/journey" element={<Protected><ClientJourney /></Protected>} />
           <Route path="/team" element={<Protected><Team /></Protected>} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </LanguageProvider>
