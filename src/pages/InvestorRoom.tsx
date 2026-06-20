@@ -25,7 +25,7 @@ function DocStatus({ status, t }: { status: string; t: Dict }) {
 }
 
 export default function InvestorRoom() {
-  const { data, update, save, loading, dirty, saving, isAdmin } = useWorkspace()
+  const { data, update, save, updateAndSave, loading, dirty, saving, isAdmin } = useWorkspace()
   const { t } = useLanguage()
   const [exporting, setExporting] = useState(false)
 
@@ -40,7 +40,7 @@ export default function InvestorRoom() {
     setExporting(true)
     try {
       await downloadDataRoom(data)
-      update(d => pushAudit(d, isAdmin ? 'admin' : 'client', t.investorRoom.exportDataRoom, data.companyProfile.name))
+      await updateAndSave(d => pushAudit(d, isAdmin ? 'admin' : 'client', t.investorRoom.exportDataRoom, data.companyProfile.name))
       notifyTeam(data, 'Kerege.ON: экспорт Data Room', `Data Room для ${data.companyProfile.name} был экспортирован.`)
     } finally {
       setExporting(false)

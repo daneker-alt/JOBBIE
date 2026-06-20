@@ -38,5 +38,24 @@ export function useWorkspace() {
     }
   }
 
-  return { data, update, save, loading, dirty, saving, isAdmin }
+  // Для действий, которые сами должны зафиксироваться в audit log без
+  // отдельного нажатия Save (например, экспорт), мутирует и сохраняет
+  // один и тот же снимок данных, не дожидаясь следующего рендера.
+  async function updateAndSave(mut: (d: WorkspaceData) => void) {
+    const next = structuredClone(data)
+    mut(next)
+    setData(next)
+    if (!user) {
+      setDirty(true)
+      return
+    }
+    setSaving(true)
+    try {
+      await saveWorkspace(user.id, next)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return { data, update, save, updateAndSave, loading, dirty, saving, isAdmin }
 }
