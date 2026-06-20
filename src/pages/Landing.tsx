@@ -188,7 +188,11 @@ export default function Landing() {
             </p>
           </div>
           <div className="text-sm text-muted">{t.landing.footerCredit}</div>
-          <a href="tel:+77017976342" className="font-mono text-sm text-ink hover:text-brand-blue transition-colors">+7 701 797 63 42</a>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="text-sm text-muted hover:text-ink transition-colors">Конфиденциальность</Link>
+            <Link to="/terms" className="text-sm text-muted hover:text-ink transition-colors">Условия</Link>
+            <a href="tel:+77017976342" className="font-mono text-sm text-ink hover:text-brand-blue transition-colors">+7 701 797 63 42</a>
+          </div>
         </div>
       </footer>
 
